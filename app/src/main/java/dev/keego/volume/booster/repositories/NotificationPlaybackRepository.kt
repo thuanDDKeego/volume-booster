@@ -1,6 +1,7 @@
 package dev.keego.volume.booster.repositories
 
 import android.app.Notification
+import dev.keego.volume.booster.model.Command
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,6 +20,9 @@ class NotificationPlaybackRepository {
     private val _nextAction = MutableStateFlow<Notification.Action?>(null)
     val nextAction = _nextAction.asStateFlow()
 
+    private val _playback = MutableStateFlow<PlayBackState>(PlayBackState())
+    val playback = _playback.asStateFlow()
+
     private val _command = MutableSharedFlow<Command?>()
     val command = _command.asSharedFlow()
 
@@ -34,16 +38,22 @@ class NotificationPlaybackRepository {
         _nextAction.value = action
     }
 
-    fun putCommand(command: Command){
+    fun putCommand(command: Command) {
         CoroutineScope(Dispatchers.IO).launch {
             _command.emit(command)
         }
     }
+
+    fun updatePlayBack(playback: PlayBackState) {
+        _playback.value = playback
+    }
+
+    fun removePlayBack() {
+        _playback.value = PlayBackState()
+    }
 }
 
-sealed class Command() {
-    object Play: Command()
-    object Pause: Command()
-    object Previous: Command()
-    object Next: Command()
-}
+data class PlayBackState(
+    val name: String = "Name song",
+    val isPlaying: Boolean = false,
+)
