@@ -1,7 +1,7 @@
 package dev.keego.volume.booster.screens.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,14 +20,18 @@ import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,10 +47,12 @@ fun home_(
     val onNext = remember { { viewModel.putCommand(Command.Next) } }
     val onPrevious = remember { { viewModel.putCommand(Command.Previous) } }
 
-    Box(
-        contentAlignment = Alignment.Center,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier.fillMaxSize(),
     ) {
+        _volume_boost_section()
         _playback_section(
             modifier = Modifier,
             playback = playback,
@@ -54,6 +60,41 @@ fun home_(
             onPause = onPause,
             onNext = onNext,
             onPrevious = onPrevious,
+        )
+    }
+}
+
+@Composable
+fun _volume_boost_section(
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val viewModel: HomeViewModel = hiltViewModel()
+    val boostState by viewModel.boostState.collectAsStateWithLifecycle()
+//    LaunchedEffect(true) {
+//        viewModel.setupBoostService(context)
+//    }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentSize()
+            .padding(vertical = 24.dp, horizontal = 36.dp)
+            .clip(MaterialTheme.shapes.medium)
+            .background(Color(0xFF81D4FA)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Switch(
+            checked = boostState.enable,
+            onCheckedChange = { viewModel.toggleEnableBoost(context, it) },
+        )
+        Slider(
+            value = boostState.db.toFloat(),
+            onValueChange = {
+                viewModel.updateBoostValue(it)
+            },
+            // 0db to 300db
+            valueRange = 0f..3000f,
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
         )
     }
 }

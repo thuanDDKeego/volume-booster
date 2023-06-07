@@ -18,7 +18,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MyNotificationListenerService : NotificationListenerService() {
+class NotificationHandlePlaybackService : NotificationListenerService() {
     private var playPauseAction: Notification.Action? = null
     private var previousAction: Notification.Action? = null
     private var nextAction: Notification.Action? = null
