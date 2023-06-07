@@ -10,8 +10,6 @@ import android.media.audiofx.LoudnessEnhancer
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.widget.Toast
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.MainActivity
@@ -56,6 +54,7 @@ class VolumeBoostService : Service() {
     }
 
     override fun onDestroy() {
+        enhancer?.setTargetGain(0)
         enhancer?.release()
         if (GlobalVars.DEBUG_TOAST) {
             Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT).show()
@@ -67,19 +66,26 @@ class VolumeBoostService : Service() {
     @Subscribe
     fun handleCommands(command: ServiceCommand) {
         when (command) {
-            ServiceCommand.STOP -> stopSelf()
+            ServiceCommand.STOP -> {
+                Timber.d("handleCommands command stop")
+                stopSelf()
+            }
+
             ServiceCommand.UPDATE -> {
+                Timber.d("handleCommands command update")
                 enhancer?.setTargetGain(boostServiceRepository.db.value)
                 updateNotification()
             }
 
             ServiceCommand.PLAY -> {
+                Timber.d("handleCommands command play")
                 enhancer?.enabled = true
                 on = true
                 updateNotification()
             }
 
             ServiceCommand.PAUSE -> {
+                Timber.d("handleCommands command pause")
                 enhancer?.enabled = false
                 on = false
                 updateNotification()
@@ -111,7 +117,6 @@ class VolumeBoostService : Service() {
         startForeground(FOREGROUND_NOTIFICATION, notification)
     }
 
-    @NonNull
     private fun getNotification(flag: Int): Notification {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, flag)
@@ -146,7 +151,6 @@ class VolumeBoostService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    @Nullable
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
