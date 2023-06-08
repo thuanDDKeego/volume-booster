@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.audiofx.Equalizer
 import android.media.audiofx.LoudnessEnhancer
 import android.os.IBinder
 import android.preference.PreferenceManager
@@ -20,6 +21,7 @@ import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceCommand
 import dev.keego.volume.booster.services.messages.ServiceQueryOn
 import dev.keego.volume.booster.services.messages.ServiceQueryPing
+import kotlinx.coroutines.flow.fold
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.android.BuildConfig
@@ -44,6 +46,8 @@ class VolumeBoostService : Service() {
 
     private var loudness: Int = 0
 
+    private var equalizer: Equalizer? = null
+
     override fun onCreate() {
         super.onCreate()
         EventBus.getDefault().register(this)
@@ -51,6 +55,24 @@ class VolumeBoostService : Service() {
         enhancer = LoudnessEnhancer(0)
         enhancer?.setTargetGain(boostServiceRepository.db.value)
         enhancer?.enabled = true
+
+        equalizer = Equalizer(0, 0)
+        equalizer?.enabled = true
+
+        val frequencies = getAllAdjustableFrequencies()
+        val defaultBandLevels = getDefaultBandLevels()
+        boostServiceRepository.fetchFrequencies(
+            frequencies.mapIndexed { index, it ->
+                Pair(
+                    it,
+                    defaultBandLevels[index],
+                )
+            },
+        )
+        frequencies.forEachIndexed { index, frequency ->
+            Timber.d("frequencies $index $frequency -- ${defaultBandLevels[index]}")
+        }
+        Timber.d("frequencies ${frequencies.joinToString { "$it " }}")
     }
 
     override fun onDestroy() {
@@ -61,6 +83,57 @@ class VolumeBoostService : Service() {
         }
         EventBus.getDefault().unregister(this)
         super.onDestroy()
+    }
+
+    private fun getAllAdjustableFrequencies(): MutableList<Int> {
+        val adjustableFrequencies = mutableListOf<Int>()
+        equalizer?.setBandLevel(31, 0)
+        val bandCount = equalizer?.numberOfBands ?: 0
+        for (i in 0 until bandCount) {
+            val centerFrequency = equalizer?.getCenterFreq(i.toShort())
+            centerFrequency?.let { frequency ->
+                adjustableFrequencies.add(frequency)
+            }
+        }
+
+        return adjustableFrequencies
+    }
+
+    // Lấy vị trí của tần số trong danh sách tần số
+    fun getBandIndex(frequency: Int): Short {
+        return equalizer?.getBand(frequency) ?: 0
+    }
+
+    // Tăng cường tần số cụ thể
+    fun boostFrequency(frequency: Int, gain: Int) {
+        val bandIndex = getBandIndex(frequency)
+        equalizer?.setBandLevel(bandIndex, gain.toShort())
+    }
+
+    // Giảm mức độ tần số cụ thể
+    fun reduceFrequency(frequency: Int, gain: Int) {
+        val bandIndex = getBandIndex(frequency)
+        equalizer?.setBandLevel(bandIndex, (-gain).toShort())
+    }
+
+    private fun getDefaultBandLevels(): IntArray {
+        val bandCount = equalizer?.numberOfBands ?: 0
+        val defaultBandLevels = IntArray(bandCount.toInt())
+
+        for (i in 0 until bandCount) {
+            val centerFrequency = equalizer?.getCenterFreq(i.toShort())
+            val levelRange = equalizer?.getBandLevelRange()
+
+            centerFrequency?.let { frequency ->
+                levelRange?.let { range ->
+                    val defaultLevel =
+                        (range[0] + range[1]) / 2 // Giá trị mặc định nằm ở giữa khoảng mức độ tần số
+                    defaultBandLevels[i.toInt()] = defaultLevel
+                }
+            }
+        }
+
+        return defaultBandLevels
     }
 
     @Subscribe
@@ -75,6 +148,13 @@ class VolumeBoostService : Service() {
                 Timber.d("handleCommands command update")
                 enhancer?.setTargetGain(boostServiceRepository.db.value)
                 updateNotification()
+            }
+
+            ServiceCommand.UPDATE_HERTZ -> {
+                Timber.d("handleCommands command update")
+                boostServiceRepository.bandValue.value.forEach {
+                    boostFrequency(it.first, it.second)
+                }
             }
 
             ServiceCommand.PLAY -> {

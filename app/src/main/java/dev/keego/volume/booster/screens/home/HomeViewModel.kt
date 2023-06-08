@@ -35,6 +35,8 @@ class HomeViewModel @Inject constructor(
 
     private val _boostState = MutableStateFlow(BoostVolumeState())
     val boostState = _boostState.asStateFlow()
+    private val _frequencyBandLevel = MutableStateFlow<List<Pair<Int, Int>>>(listOf())
+    val frequencyBandLevel = _frequencyBandLevel.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -56,6 +58,11 @@ class HomeViewModel @Inject constructor(
             launch {
                 boostServiceRepository.enable.collectLatest {
                     _boostState.value = _boostState.value.copy(enable = it)
+                }
+            }
+            launch {
+                boostServiceRepository.bandValue.collectLatest {
+                    _frequencyBandLevel.value = it
                 }
             }
         }
@@ -92,5 +99,10 @@ class HomeViewModel @Inject constructor(
     fun updateBoostValue(value: Float) {
         Timber.d("updateBoostValue $value")
         boostServiceRepository.updateDb(value.toInt())
+    }
+
+    fun updateBandValue(frequency: Int, value: Int) {
+        Timber.d("updateBandValue viewModel join $frequency --- $value")
+        boostServiceRepository.updateBandValue(frequency, value)
     }
 }
