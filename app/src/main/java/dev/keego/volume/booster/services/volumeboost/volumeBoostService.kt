@@ -87,7 +87,6 @@ class VolumeBoostService : Service() {
 
     private fun getAllAdjustableFrequencies(): MutableList<Int> {
         val adjustableFrequencies = mutableListOf<Int>()
-        equalizer?.setBandLevel(31, 0)
         val bandCount = equalizer?.numberOfBands ?: 0
         for (i in 0 until bandCount) {
             val centerFrequency = equalizer?.getCenterFreq(i.toShort())
