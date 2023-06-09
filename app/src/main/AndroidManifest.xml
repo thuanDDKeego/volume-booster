@@ -5,10 +5,29 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission android:name="lineageos.permission.OBSERVE_AUDIO_SESSIONS" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!--    <queries>-->
+    <!--        <intent>-->
+    <!--            <action android:name="android.intent.action.VIEW" />-->
+    <!--            <category android:name="android.intent.category.BROWSABLE" />-->
+    <!--            <data android:scheme="https" />-->
+    <!--        </intent>-->
+    <!--        <intent>-->
+    <!--            <action android:name="android.support.customtabs.action.CustomTabsService" />-->
+    <!--        </intent>-->
+    <!--        &lt;!&ndash; Add other music app package names here &ndash;&gt;-->
+    <!--        <intent>-->
+    <!--            <action android:name="com.android.vending.billing.InAppBillingService.BIND" />-->
+    <!--        </intent>-->
+    <!--    </queries>-->
+
     <application
         android:name=".Application"
         android:allowBackup="true"
@@ -31,11 +50,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".services.NotificationHandlePlaybackService"
+            android:exported="true"
             android:label="notification_service"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-            android:exported="true">
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
@@ -46,6 +66,11 @@
             android:enabled="true"
             android:foregroundServiceType="mediaPlayback" />
 
+        <service
+            android:name=".services.detechappopen.AppDetectionService"
+            android:enabled="true"
+            android:exported="true" />
+
         <receiver
             android:name=".services.volumeboost.ServiceDispatcher"
             android:exported="true">
@@ -53,11 +78,10 @@
                 <action android:name="android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION" />
                 <action android:name="android.media.action.CLOSE_AUDIO_EFFECT_CONTROL_SESSION" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-                <!--                <action android:name="lineageos.intent.action.ACTION_AUDIO_SESSIONS_CHANGED" />-->
+                <action android:name="lineageos.intent.action.ACTION_AUDIO_SESSIONS_CHANGED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

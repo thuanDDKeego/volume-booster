@@ -11,7 +11,10 @@ class Application : Application() {
         Timber.plant(
             object : Timber.DebugTree() {
                 override fun log(
-                    priority: Int, tag: String?, message: String, t: Throwable?
+                    priority: Int,
+                    tag: String?,
+                    message: String,
+                    t: Throwable?,
                 ) {
                     super.log(priority, "keego_$tag", "$tag >> $message", t)
                 }

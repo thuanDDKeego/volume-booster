@@ -16,12 +16,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.MainActivity
 import dev.keego.volume.booster.R
 import dev.keego.volume.booster.repositories.BoostServiceRepository
+import dev.keego.volume.booster.services.detechappopen.AppForegroundReceiver
 import dev.keego.volume.booster.services.messages.QueryReplyOn
 import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceCommand
 import dev.keego.volume.booster.services.messages.ServiceQueryOn
 import dev.keego.volume.booster.services.messages.ServiceQueryPing
-import kotlinx.coroutines.flow.fold
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.android.BuildConfig
@@ -50,6 +50,7 @@ class VolumeBoostService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+//        AppForegroundReceiver.register(this)
         EventBus.getDefault().register(this)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         enhancer = LoudnessEnhancer(0)
@@ -78,6 +79,9 @@ class VolumeBoostService : Service() {
     override fun onDestroy() {
         enhancer?.setTargetGain(0)
         enhancer?.release()
+
+        equalizer?.release()
+
         if (GlobalVars.DEBUG_TOAST) {
             Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT).show()
         }

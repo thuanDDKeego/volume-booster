@@ -95,7 +95,7 @@ fun _volume_boost_section(
                 viewModel.updateBoostValue(it)
             },
             // 0db to 300db
-            valueRange = 0f..3000f,
+            valueRange = 0f..6000f,
             modifier = Modifier.fillMaxWidth().padding(24.dp),
         )
     }
