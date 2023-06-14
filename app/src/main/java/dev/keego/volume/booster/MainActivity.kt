@@ -1,16 +1,26 @@
 package dev.keego.volume.booster
 
+import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
+import dev.keego.volume.booster.screens.home.NavGraphs
 import dev.keego.volume.booster.screens.home.home_
 import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceQueryPing
@@ -18,9 +28,12 @@ import dev.keego.volume.booster.services.volumeboost.GlobalVars
 import dev.keego.volume.booster.ui.theme.VolumeBoosterTheme
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requirePermission()
@@ -30,35 +43,55 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     home_()
+                }
+                val engine = rememberNavHostEngine()
+                val navController = engine.rememberNavController().apply {
+                    addOnDestinationChangedListener { _, destination, _ ->
+                        Timber.v("navigate -> ${destination.route}")
+//                        InternetRequiredHelper.required(this@MainActivity)
+                    }
+                }
+                Scaffold {
+                    DestinationsNavHost(
+                        modifier = Modifier,
+                        navGraph = NavGraphs.root,
+                        engine = engine,
+                        navController = navController
+                    )
                 }
             }
         }
     }
 
     private fun requirePermission() {
-        if (!isNotificationServiceEnabled()) {
+        if (!isNotificationServiceEnabled(context = this)) {
             val intent = Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)
             startActivity(intent)
         }
     }
 
-    private fun isNotificationServiceEnabled(): Boolean {
-//        val pkgName = packageName
-//        val flat = Settings.Secure.getString(contentResolver, ENABLED_NOTIFICATION_LISTENERS)
-//        if (!TextUtils.isEmpty(flat)) {
-//            val names = flat.split(":")
-//            for (i in names.indices) {
-//                val cn = ComponentName.unflattenFromString(names[i])
-//                if (cn != null) {
-//                    if (TextUtils.equals(pkgName, cn.packageName)) {
-//                        return true
-//                    }
-//                }
-//            }
-//        }
+    private fun isNotificationServiceEnabled(context: Context): Boolean {
+        val enabledListeners = Settings.Secure.getString(
+            context.contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        val packageName = context.packageName
+        if (!TextUtils.isEmpty(enabledListeners)) {
+            val listeners = enabledListeners.split(":")
+            for (listener in listeners) {
+                val componentName = ComponentName.unflattenFromString(listener)
+                if (componentName != null && TextUtils.equals(
+                        packageName,
+                        componentName.packageName
+                    )
+                ) {
+                    return true
+                }
+            }
+        }
         return false
     }
 

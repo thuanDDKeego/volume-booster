@@ -6,7 +6,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.dagger.hilt.android'
     // <other>
-    id 'com.google.devtools.ksp' version '1.8.10-1.0.9' // check to update with kotlin_version
+    id 'com.google.devtools.ksp' version '1.7.20-1.0.7' // check to update with kotlin_version
     id 'com.google.gms.google-services'
 //    id 'com.google.firebase.firebase-perf'
     id 'com.google.firebase.crashlytics'
@@ -33,6 +33,14 @@ android {
         disable 'ComposableNaming'
     }
 
+    applicationVariants.all { variant ->
+        kotlin.sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -40,17 +48,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.2'
+        kotlinCompilerExtensionVersion '1.3.2'
     }
     packagingOptions {
         resources {
@@ -113,5 +121,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     // </firebase>
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3"
 }

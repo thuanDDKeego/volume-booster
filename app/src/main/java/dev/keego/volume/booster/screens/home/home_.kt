@@ -35,11 +35,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import dev.keego.volume.booster.model.Command
+import dev.keego.volume.booster.shared.ui.UpdateCustomCircularProgressIndicator
+import timber.log.Timber
 
+@RootNavGraph(start = true)
+@Destination
 @Composable
 fun home_(
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val playback by viewModel.playbackState.collectAsStateWithLifecycle()
     val onPlay = remember { { viewModel.putCommand(Command.Play) } }
@@ -49,7 +55,7 @@ fun home_(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ) {
         _volume_boost_section()
         Spacer(modifier = Modifier.height(24.dp))
@@ -59,7 +65,7 @@ fun home_(
             onPlay = onPlay,
             onPause = onPause,
             onNext = onNext,
-            onPrevious = onPrevious,
+            onPrevious = onPrevious
         )
         Spacer(modifier = Modifier.height(24.dp))
         _equalizer()
@@ -68,7 +74,7 @@ fun home_(
 
 @Composable
 fun _volume_boost_section(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val viewModel: HomeViewModel = hiltViewModel()
@@ -83,11 +89,24 @@ fun _volume_boost_section(
             .padding(vertical = 24.dp, horizontal = 36.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(Color(0xFF81D4FA)),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        UpdateCustomCircularProgressIndicator(
+            modifier = Modifier
+                .size(250.dp)
+                .background(Color.DarkGray),
+            initialValue = 50,
+            primaryColor = Color(0xFFFF5722),
+            secondaryColor = Color(0xFFAFAFAF),
+            circleRadius = 230f,
+            onPositionChange = { position ->
+                Timber.d("onPositionChange $position")
+                // do something with this position value
+            }
+        )
         Switch(
             checked = boostState.enable,
-            onCheckedChange = { viewModel.toggleEnableBoost(context, it) },
+            onCheckedChange = { viewModel.toggleEnableBoost(context, it) }
         )
         Slider(
             value = boostState.db.toFloat(),
@@ -96,7 +115,7 @@ fun _volume_boost_section(
             },
             // 0db to 300db
             valueRange = 0f..6000f,
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp)
         )
     }
 }
@@ -108,7 +127,7 @@ fun _playback_section(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onPrevious: () -> Unit,
-    onNext: () -> Unit,
+    onNext: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -117,7 +136,7 @@ fun _playback_section(
             .clip(MaterialTheme.shapes.medium)
             .background(Color(0xFFE6EE9C))
             .padding(vertical = 24.dp, horizontal = 36.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = playback.name)
         Spacer(modifier = Modifier.height(12.dp))
@@ -127,7 +146,7 @@ fun _playback_section(
                     imageVector = Icons.Rounded.ArrowBack,
                     contentDescription = "",
                     modifier = Modifier.size(24.dp),
-                    tint = Color.Black,
+                    tint = Color.Black
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -136,7 +155,7 @@ fun _playback_section(
                     imageVector = if (playback.isPlaying) Icons.Rounded.Close else Icons.Rounded.PlayArrow,
                     contentDescription = "",
                     modifier = Modifier.size(24.dp),
-                    tint = Color.Black,
+                    tint = Color.Black
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -145,7 +164,7 @@ fun _playback_section(
                     imageVector = Icons.Rounded.ArrowForward,
                     contentDescription = "",
                     modifier = Modifier.size(24.dp),
-                    tint = Color.Black,
+                    tint = Color.Black
                 )
             }
         }
@@ -154,7 +173,7 @@ fun _playback_section(
 
 @Composable
 fun _equalizer(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val viewModel: HomeViewModel = hiltViewModel()
@@ -169,20 +188,19 @@ fun _equalizer(
             .padding(vertical = 24.dp, horizontal = 36.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(Color(0xFF81D4FA)),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         bandLevel.forEach {
             Slider(
                 value = it.second.toFloat(),
-                onValueChange = {value ->
+                onValueChange = { value ->
                     viewModel.updateBandValue(it.first, value.toInt())
                 },
                 // 0db to 300db
                 valueRange = -1500f..1500f,
-                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                modifier = Modifier.fillMaxWidth().padding(24.dp)
             )
         }
-
     }
 }
 
