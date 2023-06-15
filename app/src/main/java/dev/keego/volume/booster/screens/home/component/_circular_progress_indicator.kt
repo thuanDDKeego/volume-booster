@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -41,6 +42,7 @@ fun _circular_progress_indicator(
     primaryColor: Color,
     secondaryColor: Color,
     range: IntRange = 0..100,
+    progressSize: Float,
     circleRadius: Float,
     onValueChange: (Int) -> Unit,
 ) {
@@ -64,9 +66,13 @@ fun _circular_progress_indicator(
         mutableStateOf(initialValue)
     }
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
         Canvas(
             modifier = Modifier
+                .size(progressSize.dp)
                 .fillMaxSize()
                 .pointerInput(true) {
                     detectDragGestures(
@@ -229,6 +235,7 @@ fun _circular_progress_preview() {
         initialValue = 1,
         primaryColor = Color(0xFFFF5722),
         secondaryColor = Color.DarkGray,
+        progressSize = 250f,
         circleRadius = 230f,
         onValueChange = {},
     )

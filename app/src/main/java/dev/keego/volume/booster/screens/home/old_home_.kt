@@ -109,6 +109,7 @@ fun _volume_boost_section(
             initialValue = 50,
             primaryColor = Color(0xFFFF5722),
             secondaryColor = Color(0xFFAFAFAF),
+            progressSize = 230f,
             circleRadius = 230f,
             onValueChange = { position ->
                 Timber.d("onPositionChange $position")
