@@ -39,6 +39,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import dev.keego.volume.booster.model.Command
 import dev.keego.volume.booster.shared.ui.UpdateCustomCircularProgressIndicator
+import dev.keego.volume.booster.shared.ui._circular_progress_indicator
 import timber.log.Timber
 
 @RootNavGraph(start = true)
@@ -91,7 +92,20 @@ fun _volume_boost_section(
             .background(Color(0xFF81D4FA)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        UpdateCustomCircularProgressIndicator(
+//        UpdateCustomCircularProgressIndicator(
+//            modifier = Modifier
+//                .size(250.dp)
+//                .background(Color.DarkGray),
+//            initialValue = 50,
+//            primaryColor = Color(0xFFFF5722),
+//            secondaryColor = Color(0xFFAFAFAF),
+//            circleRadius = 230f,
+//            onPositionChange = { position ->
+//                Timber.d("onPositionChange $position")
+//                // do something with this position value
+//            }
+//        )
+        _circular_progress_indicator(
             modifier = Modifier
                 .size(250.dp)
                 .background(Color.DarkGray),
@@ -99,7 +113,7 @@ fun _volume_boost_section(
             primaryColor = Color(0xFFFF5722),
             secondaryColor = Color(0xFFAFAFAF),
             circleRadius = 230f,
-            onPositionChange = { position ->
+            onValueChange = { position ->
                 Timber.d("onPositionChange $position")
                 // do something with this position value
             }
