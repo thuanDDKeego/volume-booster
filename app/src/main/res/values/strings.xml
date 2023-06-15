@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">VolumeBooster</string>
+    <string name="volume_booster">Volume Booster</string>
 </resources>

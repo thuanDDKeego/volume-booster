@@ -1,4 +1,4 @@
-package dev.keego.volume.booster.shared.ui
+package dev.keego.volume.booster.screens.home.component
 
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
@@ -42,7 +42,7 @@ fun _circular_progress_indicator(
     secondaryColor: Color,
     range: IntRange = 0..100,
     circleRadius: Float,
-    onValueChange: (Int) -> Unit
+    onValueChange: (Int) -> Unit,
 ) {
     val totalAngle = 240f
     var circleCenter by remember {
@@ -73,16 +73,16 @@ fun _circular_progress_indicator(
                         onDragStart = { offset ->
                             dragStartedAngle = -atan2(
                                 x = circleCenter.y - offset.y,
-                                y = circleCenter.x - offset.x
+                                y = circleCenter.x - offset.x,
                             ) * (180f / PI).toFloat()
-                            dragStartedAngle = (dragStartedAngle + (totalAngle / 2f)).mod(360f)
+                            dragStartedAngle = (dragStartedAngle + (totalAngle / 2f))
                         },
                         onDrag = { change, _ ->
                             var touchAngle = -atan2(
                                 x = circleCenter.y - change.position.y,
-                                y = circleCenter.x - change.position.x
+                                y = circleCenter.x - change.position.x,
                             ) * (180f / PI).toFloat()
-                            touchAngle = (touchAngle + (totalAngle/2f)).mod(360f)
+                            touchAngle = (touchAngle + (totalAngle / 2f))
                             changeAngle = touchAngle -
                                 oldPositionValue *
                                 totalAngle / (range.last - range.first)
@@ -96,20 +96,28 @@ fun _circular_progress_indicator(
                                 currentAngle + totalAngle / (range.last - range.first) * 5
 
                             if (dragStartedAngle in lowerThreshold..higherThreshold) {
-                                val newPosition = (oldPositionValue + (changeAngle / (totalAngle / (range.last - range.first))).roundToInt())
-                                if(newPosition in range) {
-                                    positionValue = newPosition
-                                    onValueChange(positionValue)
+                                val newPosition =
+                                    (oldPositionValue + (changeAngle / (totalAngle / (range.last - range.first))).roundToInt())
+                                positionValue = if (newPosition in range) {
+                                    Timber.d("circular log: join if $newPosition $oldPositionValue $changeAngle")
+                                    newPosition
+                                } else if (newPosition > range.last) {
+                                    Timber.d("circular log: join else if $newPosition $oldPositionValue $changeAngle")
+                                    range.last
+                                } else {
+                                    Timber.d("circular log: join else $newPosition $oldPositionValue $changeAngle")
+                                    range.first
                                 }
+                                onValueChange(positionValue)
                             }
-                            Timber.d("circular log: $currentAngle $dragStartedAngle $lowerThreshold $higherThreshold")
+//                            Timber.d("circular log: $currentAngle $dragStartedAngle $lowerThreshold $higherThreshold")
                         },
                         onDragEnd = {
                             oldPositionValue = positionValue
                             onValueChange(positionValue)
-                        }
+                        },
                     )
-                }
+                },
         ) {
             var width = size.width
             var height = size.height
@@ -118,19 +126,19 @@ fun _circular_progress_indicator(
 
             drawCircle(
                 brush = Brush.radialGradient(
-                    listOf(primaryColor.copy(alpha = 0.45f), primaryColor.copy(alpha = 0.15f))
+                    listOf(primaryColor.copy(alpha = 0.45f), primaryColor.copy(alpha = 0.15f)),
                 ),
                 radius = circleRadius,
-                center = circleCenter
+                center = circleCenter,
             )
             // this is background of progress bar
             drawCircle(
                 style = Stroke(
-                    width = circleThickness
+                    width = circleThickness,
                 ),
                 color = secondaryColor,
                 radius = circleRadius,
-                center = circleCenter
+                center = circleCenter,
             )
 
             // this Arc is progress value ( rounded arc)
@@ -140,17 +148,17 @@ fun _circular_progress_indicator(
                 sweepAngle = (totalAngle / range.last) * positionValue.toFloat(),
                 style = Stroke(
                     width = circleThickness,
-                    cap = StrokeCap.Round
+                    cap = StrokeCap.Round,
                 ),
                 useCenter = false,
                 size = Size(
                     width = circleRadius * 2f,
-                    height = circleRadius * 2f
+                    height = circleRadius * 2f,
                 ),
                 topLeft = Offset(
                     x = (width - circleRadius * 2f) / 2f,
-                    y = (height - circleRadius * 2f) / 2f
-                )
+                    y = (height - circleRadius * 2f) / 2f,
+                ),
             )
 
             // litte line around circle
@@ -170,24 +178,24 @@ fun _circular_progress_indicator(
 
                 val start = Offset(
                     x = (outerRadius * cos(angleInRadian) + circleCenter.x + xGapAdjustment).toFloat(),
-                    y = (outerRadius * sin(angleInRadian) + circleCenter.y + yGapAdjustment).toFloat()
+                    y = (outerRadius * sin(angleInRadian) + circleCenter.y + yGapAdjustment).toFloat(),
                 )
                 val end = Offset(
                     x = (outerRadius * cos(angleInRadian) + circleCenter.x + xGapAdjustment).toFloat(),
-                    y = (outerRadius * sin(angleInRadian) + circleThickness + circleCenter.y + yGapAdjustment).toFloat()
+                    y = (outerRadius * sin(angleInRadian) + circleThickness + circleCenter.y + yGapAdjustment).toFloat(),
                 )
                 rotate(
-                    degrees = (360f - totalAngle) / 2
+                    degrees = (360f - totalAngle) / 2,
                 ) {
                     rotate(
                         degrees = angleInDegrees,
-                        pivot = start
+                        pivot = start,
                     ) {
                         drawLine(
                             color = color,
                             start = start,
                             end = end,
-                            strokeWidth = 1.dp.toPx()
+                            strokeWidth = 1.dp.toPx(),
                         )
                     }
                 }
@@ -203,7 +211,7 @@ fun _circular_progress_indicator(
                             textAlign = Paint.Align.CENTER
                             color = Color.White.toArgb()
                             isFakeBoldText = true
-                        }
+                        },
                     )
                 }
             }
@@ -222,6 +230,6 @@ fun _circular_progress_preview() {
         primaryColor = Color(0xFFFF5722),
         secondaryColor = Color.DarkGray,
         circleRadius = 230f,
-        onValueChange = {}
+        onValueChange = {},
     )
 }
