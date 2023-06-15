@@ -101,7 +101,7 @@ fun _circular_progress_indicator(
                             val higherThreshold =
                                 currentAngle + totalAngle / (range.last - range.first) * 5
 
-                            if (dragStartedAngle in lowerThreshold..higherThreshold) {
+//                            if (dragStartedAngle in lowerThreshold..higherThreshold) {
                                 val newPosition =
                                     (oldPositionValue + (changeAngle / (totalAngle / (range.last - range.first))).roundToInt())
                                 positionValue = if (newPosition in range) {
@@ -115,7 +115,7 @@ fun _circular_progress_indicator(
                                     range.first
                                 }
                                 onValueChange(positionValue)
-                            }
+//                            }
 //                            Timber.d("circular log: $currentAngle $dragStartedAngle $lowerThreshold $higherThreshold")
                         },
                         onDragEnd = {
