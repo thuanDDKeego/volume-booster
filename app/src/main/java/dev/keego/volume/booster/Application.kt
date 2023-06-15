@@ -2,12 +2,15 @@ package dev.keego.volume.booster
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import dev.keego.volume.booster.services.volumeboost.ServiceDispatcher
 import timber.log.Timber
 
 @HiltAndroidApp
 class Application : Application() {
     override fun onCreate() {
         super.onCreate()
+        //TODO need to remove this line
+        ServiceDispatcher.startService(applicationContext)
         Timber.plant(
             object : Timber.DebugTree() {
                 override fun log(
