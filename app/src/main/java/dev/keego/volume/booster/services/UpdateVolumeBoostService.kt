@@ -18,10 +18,12 @@ import dev.keego.volume.booster.repositories.BoostServiceRepository
 import dev.keego.volume.booster.services.messages.*
 import dev.keego.volume.booster.services.volumeboost.GlobalVars
 import dev.keego.volume.booster.services.volumeboost.NotificationChannelHelper
+import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.min
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class UpdateVolumeBoostService : Service() {
@@ -56,10 +58,15 @@ class UpdateVolumeBoostService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground()
         if (BuildConfig.DEBUG) {
-            Timber.tag(TAG).i("onStartCommand() called with intent = [ $intent ], flags = [ $flags ], startId = [ $startId ]")
+            Timber.tag(TAG)
+                .i(
+                    "onStartCommand() called with intent = [ $intent ], flags = [ $flags ], startId = [ $startId ]"
+                )
         }
         if (GlobalVars.DEBUG_TOAST) {
-            showToast("onStartCommand() called with intent = [$intent], flags = [$flags], startId = [$startId]")
+            showToast(
+                "onStartCommand() called with intent = [$intent], flags = [$flags], startId = [$startId]"
+            )
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -80,15 +87,26 @@ class UpdateVolumeBoostService : Service() {
             captureSize = Visualizer.getCaptureSizeRange()[0] // Minimum sampling
             setDataCaptureListener(
                 object : Visualizer.OnDataCaptureListener {
-                    override fun onFftDataCapture(visualizer: Visualizer, fft: ByteArray, samplingRate: Int) {
+                    override fun onFftDataCapture(
+                        visualizer: Visualizer,
+                        fft: ByteArray,
+                        samplingRate: Int
+                    ) {
                         // Here, you can add your FFT data processing
                     }
 
-                    override fun onWaveFormDataCapture(visualizer: Visualizer, waveform: ByteArray, samplingRate: Int) {
+                    override fun onWaveFormDataCapture(
+                        visualizer: Visualizer,
+                        waveform: ByteArray,
+                        samplingRate: Int
+                    ) {
                         processWaveform(waveform)
                     }
                 },
-                Visualizer.getMaxCaptureRate(), true, true)
+                Visualizer.getMaxCaptureRate(),
+                true,
+                true
+            )
             enabled = true // Configuration is done, can enable now...
         }
     }
@@ -96,7 +114,14 @@ class UpdateVolumeBoostService : Service() {
     private fun setupDefaultFrequencies() {
         val frequencies = getAllAdjustableFrequencies()
         val defaultBandLevels = getDefaultBandLevels()
-        boostServiceRepository.fetchFrequencies(frequencies.mapIndexed { index, it -> Pair(it, defaultBandLevels[index]) })
+        boostServiceRepository.fetchFrequencies(
+            frequencies.mapIndexed { index, it ->
+                Pair(
+                    it,
+                    defaultBandLevels[index]
+                )
+            }
+        )
         frequencies.forEachIndexed { index, frequency ->
             Timber.d("frequencies $index $frequency -- ${defaultBandLevels[index]}")
         }
@@ -118,6 +143,18 @@ class UpdateVolumeBoostService : Service() {
     private fun processWaveform(waveform: ByteArray) {
         // Here, you can add your waveform processing code
         Timber.d("waveform $waveform")
+        val resolution = 32
+        val processed = IntArray(resolution)
+        val captureSize =
+            Visualizer.getCaptureSizeRange()[0] // Same value than in the Visualizer setup
+        val groupSize = captureSize / resolution
+        for (i in 0 until resolution) {
+            processed[i] = waveform.map { abs(it.toInt()) }
+                .subList(i * groupSize, min((i + 1) * groupSize, waveform.size))
+                .average().toInt()
+        }
+        Timber.d("processed ${processed.joinToString { "$it " }}")
+        boostServiceRepository.updateVisualizerArray(processed)
     }
 
     private fun getAllAdjustableFrequencies(): MutableList<Int> {
@@ -222,7 +259,9 @@ class UpdateVolumeBoostService : Service() {
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, flag)
         return NotificationCompat.Builder(this, NotificationChannelHelper.SERVICE_CHANNEL)
             .setContentTitle("Volume Boost Service")
-            .setContentText(if (on) "Loudness Boost: ${boostServiceRepository.db.value / 10.0}db" else "Paused")
+            .setContentText(
+                if (on) "Loudness Boost: ${boostServiceRepository.db.value / 10.0}db" else "Paused"
+            )
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .build()

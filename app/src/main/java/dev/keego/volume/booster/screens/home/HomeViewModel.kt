@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.keego.volume.booster.model.Command
+import dev.keego.volume.booster.model.PlaybackCommand
 import dev.keego.volume.booster.repositories.BoostServiceRepository
 import dev.keego.volume.booster.repositories.NotificationPlaybackRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +44,7 @@ class HomeViewModel @Inject constructor(
                 launch {
                     playback.collectLatest {
                         _playbackState.value = _playbackState.value.copy(
-                            name = it.name,
+                            name = "${it.song}, ${it.artist}",
                             isPlaying = it.isPlaying,
                         )
                     }
@@ -88,7 +88,7 @@ class HomeViewModel @Inject constructor(
 //        }
 //    }
 
-    fun putCommand(command: Command) {
+    fun putCommand(command: PlaybackCommand) {
         notificationPlaybackRepository.putCommand(command)
     }
 

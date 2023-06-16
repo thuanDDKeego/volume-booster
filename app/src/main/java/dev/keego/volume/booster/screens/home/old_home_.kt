@@ -35,9 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import dev.keego.volume.booster.model.Command
+import dev.keego.volume.booster.model.PlaybackCommand
 import dev.keego.volume.booster.screens.home.component._circular_progress_indicator
 import timber.log.Timber
 
@@ -46,10 +44,10 @@ fun home_(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val playback by viewModel.playbackState.collectAsStateWithLifecycle()
-    val onPlay = remember { { viewModel.putCommand(Command.Play) } }
-    val onPause = remember { { viewModel.putCommand(Command.Pause) } }
-    val onNext = remember { { viewModel.putCommand(Command.Next) } }
-    val onPrevious = remember { { viewModel.putCommand(Command.Previous) } }
+    val onPlay = remember { { viewModel.putCommand(PlaybackCommand.Play) } }
+    val onPause = remember { { viewModel.putCommand(PlaybackCommand.Pause) } }
+    val onNext = remember { { viewModel.putCommand(PlaybackCommand.Next) } }
+    val onPrevious = remember { { viewModel.putCommand(PlaybackCommand.Previous) } }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

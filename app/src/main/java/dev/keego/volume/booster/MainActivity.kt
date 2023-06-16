@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.rememberNavHostEngine
@@ -92,26 +93,33 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+//    private fun isNotificationServiceEnabled(context: Context): Boolean {
+//        val enabledListeners = Settings.Secure.getString(
+//            context.contentResolver,
+//            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+//        )
+//        val packageName = context.packageName
+//        if (!TextUtils.isEmpty(enabledListeners)) {
+//            val listeners = enabledListeners.split(":")
+//            for (listener in listeners) {
+//                val componentName = ComponentName.unflattenFromString(listener)
+//                if (componentName != null && TextUtils.equals(
+//                        packageName,
+//                        componentName.packageName,
+//                    )
+//                ) {
+//                    return true
+//                }
+//            }
+//        }
+//        return false
+//    }
+
     private fun isNotificationServiceEnabled(context: Context): Boolean {
-        val enabledListeners = Settings.Secure.getString(
-            context.contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-        )
         val packageName = context.packageName
-        if (!TextUtils.isEmpty(enabledListeners)) {
-            val listeners = enabledListeners.split(":")
-            for (listener in listeners) {
-                val componentName = ComponentName.unflattenFromString(listener)
-                if (componentName != null && TextUtils.equals(
-                        packageName,
-                        componentName.packageName,
-                    )
-                ) {
-                    return true
-                }
-            }
-        }
-        return false
+        val enabledListeners = NotificationManagerCompat.getEnabledListenerPackages(context)
+
+        return enabledListeners.contains(packageName)
     }
 
     override fun onStart() {

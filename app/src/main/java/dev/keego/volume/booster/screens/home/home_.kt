@@ -34,8 +34,8 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.screens.home.component._visualizer_page
-import dev.keego.volume.booster.screens.home.component._volume_page
+import dev.keego.volume.booster.screens.home.equalizer._equalizer_page
+import dev.keego.volume.booster.screens.home.volume._volume_page
 import dev.keego.volume.booster.shared.ui._general_top_bar
 import kotlinx.coroutines.launch
 
@@ -114,7 +114,7 @@ fun home_(navigator: DestinationsNavigator) {
                         }
 
                         else -> {
-                            _visualizer_page(
+                            _equalizer_page(
                                 modifier = Modifier.fillMaxSize(),
                             )
                         }
