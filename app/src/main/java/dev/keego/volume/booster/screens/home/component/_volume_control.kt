@@ -20,7 +20,7 @@ import dev.keego.volume.booster.shared.utils.Dimensions.toDp
 @Composable
 fun _volume_control(
     modifier: Modifier = Modifier,
-    visualizerData: IntArray? = null,
+    visualizerData: Int,
     // this value from 0 to 100
     boostValue: Int = 0,
 //    boostValue:
@@ -41,7 +41,7 @@ fun _volume_control(
                 .height(220.dp)
                 .background(Color(0x40000000)),
             resolution = 1,
-            visualizationData = visualizerData ?: generateZeroArray(1)
+            visualizationData = visualizerData
         )
 //        Spacer(modifier = Modifier.weight(1f))
         _circular_progress_indicator(
@@ -63,7 +63,7 @@ fun _volume_control(
                 .height(220.dp)
                 .background(Color(0x40000000)),
             resolution = 1,
-            visualizationData = visualizerData ?: generateZeroArray(1)
+            visualizationData = visualizerData
         )
     }
 }

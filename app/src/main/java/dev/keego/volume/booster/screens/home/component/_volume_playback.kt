@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,19 +24,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.repositories.PlayBackState
+import dev.keego.volume.booster.screens.home.volume.VolumeViewModel
 
 @Composable
 fun _volume_playback(
     modifier: Modifier = Modifier,
-    playback: PlayBackState,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
+    val viewModel = hiltViewModel<VolumeViewModel>()
+    val playback by viewModel.playbackState.collectAsStateWithLifecycle()
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -58,8 +62,10 @@ fun _volume_playback(
             contentDescription = "song thumb"
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Column(horizontalAlignment = Alignment.Start
-        , modifier = Modifier.weight(1f)) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = playback.song,
                 style = MaterialTheme.typography.headlineSmall.copy(fontSize = 13.sp),
@@ -83,7 +89,9 @@ fun _volume_playback(
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
-        IconButton(onClick = { if (playback.isPlaying) onPause() else onPlay() }) {
+        IconButton(
+            onClick = if (playback.isPlaying) onPause else onPlay
+        ) {
             Icon(
                 painter = painterResource(
                     id = if (playback.isPlaying) R.drawable.ic_pause else R.drawable.ic_play
@@ -94,7 +102,7 @@ fun _volume_playback(
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
-        IconButton(onClick = { onNext() }) {
+        IconButton(onClick = onNext) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_next_song),
                 contentDescription = "",

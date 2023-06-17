@@ -6,6 +6,7 @@
     <disabledRules>
       <list>
         <option value="filename" />
+        <option value="no-wildcard-imports" />
       </list>
     </disabledRules>
   </component>

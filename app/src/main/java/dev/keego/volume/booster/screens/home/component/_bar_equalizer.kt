@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,7 +25,7 @@ import kotlin.math.abs
 fun _bar_equalizer(
     modifier: Modifier,
     resolution: Int = 32,
-    visualizationData: IntArray,
+    visualizationData: Int
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
     Row(modifier.onSizeChanged { size = it }) {
@@ -35,17 +34,18 @@ fun _bar_equalizer(
         val padding = 1.dp
         val barWidthDp = widthDp / resolution
 
-        visualizationData.forEachIndexed { index, data ->
-            val height by animateDpAsState(targetValue = heightDp * abs(128f - data) / 128f)
-            Box(
-                Modifier
-                    .width(barWidthDp)
-                    .height(height)
-                    .padding(start = if (index == 0) 0.dp else padding)
-                    .background(MaterialTheme.colorScheme.primary)
-                    .align(Alignment.Bottom),
-            )
-        }
+//        visualizationData.forEachIndexed { index, data ->
+        val height by animateDpAsState(
+            targetValue = heightDp * abs(128f - visualizationData) / 128f
+        )
+        Box(
+            Modifier
+                .width(barWidthDp)
+                .height(height)
+//                    .padding(start = if (index == 0) 0.dp else padding)
+                .background(MaterialTheme.colorScheme.primary)
+                .align(Alignment.Bottom)
+        )
     }
 }
 

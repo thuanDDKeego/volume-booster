@@ -30,7 +30,6 @@ fun _volume_page(
 ) {
     val viewModel = hiltViewModel<VolumeViewModel>()
     val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
-    val playback by viewModel.playbackState.collectAsStateWithLifecycle()
 
     val thirtyLambdaOnClick = remember<(Int) -> Unit> {
         { viewModel.updateBoostValue(it) }
@@ -91,7 +90,6 @@ fun _volume_page(
         }
         Spacer(modifier = Modifier.weight(1f))
         _volume_playback(
-            playback = playback,
             onPlay = { putPlaybackCommand.invoke(PlaybackCommand.Play) },
             onPause = { putPlaybackCommand.invoke(PlaybackCommand.Pause) },
             onPrevious = { putPlaybackCommand.invoke(PlaybackCommand.Previous) },

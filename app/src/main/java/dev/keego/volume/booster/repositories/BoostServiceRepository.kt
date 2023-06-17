@@ -16,7 +16,7 @@ class BoostServiceRepository {
     val db = _db.asStateFlow()
     private val _bandValue = MutableStateFlow<List<Pair<Int, Int>>>(listOf())
     val bandValue = _bandValue.asStateFlow()
-    private val _visualizerArray = MutableStateFlow<IntArray?>(null)
+    private val _visualizerArray = MutableStateFlow<Int>(128)
     val visualizerArray = _visualizerArray.asStateFlow()
     fun toggleEnableService(context: Context, enable: Boolean) {
         _enable.value = enable
@@ -55,7 +55,7 @@ class BoostServiceRepository {
         _bandValue.value = frequencies
     }
 
-    fun updateVisualizerArray(array: IntArray?) {
-        _visualizerArray.value = array
+    fun updateVisualizerArray(value: Int) {
+        _visualizerArray.value = value
     }
 }

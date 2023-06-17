@@ -154,7 +154,7 @@ class UpdateVolumeBoostService : Service() {
                 .average().toInt()
         }
         Timber.d("processed ${processed.joinToString { "$it " }}")
-        boostServiceRepository.updateVisualizerArray(processed)
+        boostServiceRepository.updateVisualizerArray(processed.lastOrNull()?:128)
     }
 
     private fun getAllAdjustableFrequencies(): MutableList<Int> {
