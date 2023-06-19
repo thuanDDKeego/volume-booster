@@ -154,7 +154,7 @@ class UpdateVolumeBoostService : Service() {
                 .average().toInt()
         }
         Timber.d("processed ${processed.joinToString { "$it " }}")
-        boostServiceRepository.updateVisualizerArray(processed.lastOrNull()?:128)
+        boostServiceRepository.updateVisualizerArray(processed.lastOrNull() ?: 128)
     }
 
     private fun getAllAdjustableFrequencies(): MutableList<Int> {
@@ -178,6 +178,7 @@ class UpdateVolumeBoostService : Service() {
 
             centerFrequency?.let { frequency ->
                 levelRange?.let { range ->
+                    Timber.d("range[0] ${range[0]} range[1] ${range[1]}")
                     val defaultLevel = (range[0] + range[1]) / 2
                     defaultBandLevels[i.toInt()] = defaultLevel
                 }

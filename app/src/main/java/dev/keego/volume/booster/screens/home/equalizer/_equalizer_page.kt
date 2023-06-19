@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.keego.volume.booster.model.PlaybackCommand
 import dev.keego.volume.booster.screens.home.component._equalizer_bass_virtual
 import dev.keego.volume.booster.screens.home.component._equalizer_frequencies
@@ -24,6 +26,7 @@ fun _equalizer_page(
     tag: TagTheme = TagTheme.DEFAULT
 ) {
     val viewModel = hiltViewModel<EqualizerViewModel>()
+    val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
     val lambdaPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
         {
             viewModel.putPlaybackCommand(it)
@@ -35,7 +38,7 @@ fun _equalizer_page(
     ) {
         _equalizer_bass_virtual(
             modifier = Modifier,
-            visualizerData = 50,
+            visualizerData = visualizerData,
             virtualizeValue = 0.5f,
             bassBoostValue = 0.5f,
             onBassBoostValueChange = {},
@@ -43,7 +46,7 @@ fun _equalizer_page(
         )
         _equalizer_frequencies(
             modifier = Modifier.padding(top = 24.dp).height(180.dp).fillMaxWidth(),
-            frequenciesData = listOf(),
+//            frequenciesData = listOf(),
             onFrequencyChange = {}
         )
         Spacer(modifier = Modifier.weight(1f))
