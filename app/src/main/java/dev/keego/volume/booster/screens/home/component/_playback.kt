@@ -28,6 +28,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import dev.keego.volume.booster.R
+import dev.keego.volume.booster.repositories.PlayBackState
+import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 import dev.keego.volume.booster.screens.home.volume.VolumeViewModel
 
 @Composable
@@ -40,6 +42,45 @@ fun _volume_playback(
 ) {
     val viewModel = hiltViewModel<VolumeViewModel>()
     val playback by viewModel.playbackState.collectAsStateWithLifecycle()
+    _playback(
+        modifier = modifier,
+        playback = playback,
+        onPlay = onPlay,
+        onPause = onPause,
+        onPrevious = onPrevious,
+        onNext = onNext
+    )
+}
+
+@Composable
+fun _equalizer_playback(
+    modifier: Modifier = Modifier,
+    onPlay: () -> Unit,
+    onPause: () -> Unit,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit
+) {
+    val viewModel = hiltViewModel<EqualizerViewModel>()
+    val playback by viewModel.playbackState.collectAsStateWithLifecycle()
+    _playback(
+        modifier = modifier,
+        playback = playback,
+        onPlay = onPlay,
+        onPause = onPause,
+        onPrevious = onPrevious,
+        onNext = onNext
+    )
+}
+
+@Composable
+private fun _playback(
+    modifier: Modifier = Modifier,
+    playback: PlayBackState,
+    onPlay: () -> Unit,
+    onPause: () -> Unit,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()

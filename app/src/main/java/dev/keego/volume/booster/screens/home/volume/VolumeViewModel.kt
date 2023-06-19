@@ -13,10 +13,6 @@ class VolumeViewModel @Inject constructor(
     private val notificationblayBackRepository: NotificationPlaybackRepository
 ) :
     ViewModel() {
-    data class PlayBackState(
-        val name: String = "No current is playing",
-        val isPlaying: Boolean = false
-    )
 
     val visualizerData = volumeBoostRepository.visualizerArray
     val playbackState = notificationblayBackRepository.playback

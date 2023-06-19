@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
 @Composable
-fun _bar_equalizer(
+fun _bar_visualizer(
     modifier: Modifier,
     resolution: Int = 32,
     visualizationData: Int

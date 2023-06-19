@@ -2,4 +2,6 @@
     <string name="app_name">VolumeBooster</string>
     <string name="volume_booster">Volume Booster</string>
     <string name="system">System</string>
+    <string name="bass_boost">Bass Boost</string>
+    <string name="virtualize">Virtualize</string>
 </resources>

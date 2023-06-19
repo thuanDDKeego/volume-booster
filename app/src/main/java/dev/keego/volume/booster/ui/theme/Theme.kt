@@ -16,13 +16,13 @@ private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFFE64A19),
     secondary = Color(0xFF4CAF50),
     tertiary = Pink40,
-    background = Color(0xFF0F0F0F),
+    background = Color(0xFF222222),
     surface = Color(0xFF353535),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
     onBackground = Color(0xFFFFFFFF),
-    onSurface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFFFFFFFF)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -35,7 +35,7 @@ private val LightColorScheme = lightColorScheme(
     onSecondary = Color.White,
     onTertiary = Color.White,
     onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF333236),
+    onSurface = Color(0xFF333236)
 )
 
 @Composable
@@ -43,7 +43,7 @@ fun VolumeBoosterTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
 //    val colorScheme = when {
 //        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -68,6 +68,6 @@ fun VolumeBoosterTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = VolumeBoosterTypography,
-        content = content,
+        content = content
     )
 }

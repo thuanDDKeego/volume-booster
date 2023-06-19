@@ -34,7 +34,7 @@ fun _volume_control(
             .fillMaxWidth()
             .padding(24.dp)
     ) {
-        _bar_equalizer(
+        _bar_visualizer(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .width(28.dp)
@@ -56,7 +56,7 @@ fun _volume_control(
             // TODO update volume
         }
 //        Spacer(modifier = Modifier.weight(1f))
-        _bar_equalizer(
+        _bar_visualizer(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .width(28.dp)
