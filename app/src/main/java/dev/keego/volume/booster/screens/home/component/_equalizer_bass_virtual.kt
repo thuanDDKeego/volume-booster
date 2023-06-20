@@ -74,7 +74,7 @@ fun _equalizer_bass_virtual(
             _circular_progress_indicator(
                 modifier = modifier.wrapContentSize()
                     .background(Color.Gray),
-                initialValue = 0,
+                value = 0,
                 primaryColor = MaterialTheme.colorScheme.primary,
                 secondaryColor = MaterialTheme.colorScheme.secondary,
                 progressSize = circularProgressSize.toDp(context),
@@ -101,7 +101,7 @@ fun _equalizer_bass_virtual(
             _circular_progress_indicator(
                 modifier = modifier.wrapContentSize()
                     .background(Color.Gray),
-                initialValue = 0,
+                value = 0,
                 primaryColor = MaterialTheme.colorScheme.primary,
                 secondaryColor = MaterialTheme.colorScheme.secondary,
                 progressSize = circularProgressSize.toDp(context),

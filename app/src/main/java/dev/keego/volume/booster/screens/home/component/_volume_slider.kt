@@ -68,7 +68,7 @@ fun _volume_slider(
             value = value,
             valueRange = valueRange,
             onValueChange = onValueChange,
-            enabled = false,
+            enabled = true,
             colors = SliderDefaults.colors(
                 thumbColor = Color(0xFF3F51B5),
                 activeTrackColor = Color(0xFF03A9F4),

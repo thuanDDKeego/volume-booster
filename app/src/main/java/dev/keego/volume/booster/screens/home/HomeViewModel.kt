@@ -7,27 +7,27 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.keego.volume.booster.model.PlaybackCommand
 import dev.keego.volume.booster.repositories.BoostServiceRepository
 import dev.keego.volume.booster.repositories.NotificationPlaybackRepository
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val notificationPlaybackRepository: NotificationPlaybackRepository,
-    private val boostServiceRepository: BoostServiceRepository,
+    private val boostServiceRepository: BoostServiceRepository
 ) :
     ViewModel() {
     data class PlayBackState(
         val name: String = "No current playing",
-        val isPlaying: Boolean = false,
+        val isPlaying: Boolean = false
     )
 
     data class BoostVolumeState(
         val enable: Boolean = false,
-        val db: Int = 0,
+        val db: Int = 0
     )
 
     private val _playbackState = MutableStateFlow(PlayBackState())
@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
                     playback.collectLatest {
                         _playbackState.value = _playbackState.value.copy(
                             name = "${it.song}, ${it.artist}",
-                            isPlaying = it.isPlaying,
+                            isPlaying = it.isPlaying
                         )
                     }
                 }
@@ -98,7 +98,7 @@ class HomeViewModel @Inject constructor(
 
     fun updateBoostValue(value: Float) {
         Timber.d("updateBoostValue $value")
-        boostServiceRepository.updateDb(value.toInt())
+        boostServiceRepository.updateBoostValue(value.toInt())
     }
 
     fun updateBandValue(frequency: Int, value: Int) {

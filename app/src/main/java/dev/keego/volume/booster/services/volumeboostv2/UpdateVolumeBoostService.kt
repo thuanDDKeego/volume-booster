@@ -206,8 +206,13 @@ class UpdateVolumeBoostService : Service() {
 
             ServiceCommand.UPDATE -> {
                 Timber.d("handleCommands command update")
-                enhancer?.setTargetGain(boostServiceRepository.db.value)
-                updateNotification()
+                val boostValue = boostServiceRepository.db.value
+                if (boostValue <= 100) {
+                    enhancer?.setTargetGain(0)
+                } else {
+                    enhancer?.setTargetGain(boostServiceRepository.db.value)
+                    updateNotification()
+                }
             }
 
             ServiceCommand.UPDATE_HERTZ -> {

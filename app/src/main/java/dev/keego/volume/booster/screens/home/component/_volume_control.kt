@@ -21,10 +21,11 @@ import dev.keego.volume.booster.shared.utils.Dimensions.toDp
 fun _volume_control(
     modifier: Modifier = Modifier,
     visualizerData: Int,
-    // this value from 0 to 100
+    // this value from 100 to 400
     boostValue: Int = 0,
-//    boostValue:
-    tag: TagTheme = TagTheme.DEFAULT
+    rangeValue: IntRange = 0..300,
+    tag: TagTheme = TagTheme.DEFAULT,
+    onValueChange: (Int) -> Unit
 ) {
     val context = LocalContext.current
     val displayMetrics = context.resources.displayMetrics
@@ -47,13 +48,15 @@ fun _volume_control(
         _circular_progress_indicator(
             modifier = modifier.align(Alignment.Center).wrapContentSize()
                 .background(Color.Black),
-            initialValue = 0,
+            value = boostValue,
+            range = rangeValue,
             primaryColor = MaterialTheme.colorScheme.primary,
             secondaryColor = MaterialTheme.colorScheme.secondary,
             progressSize = (screenWidth * 0.5f).toDp(context),
             circleRadius = (screenWidth * 0.45f).toDp(context)
         ) {
             // TODO update volume
+            onValueChange(it)
         }
 //        Spacer(modifier = Modifier.weight(1f))
         _bar_visualizer(

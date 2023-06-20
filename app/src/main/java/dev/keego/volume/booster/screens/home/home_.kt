@@ -104,7 +104,7 @@ fun home_(navigator: DestinationsNavigator) {
                         .padding(top = 60.dp),
                     pageCount = PAGE_NUMBER,
                     userScrollEnabled = true,
-                    state = pagerState,
+                    state = pagerState
                 ) { page ->
                     when (page) {
                         0 -> {

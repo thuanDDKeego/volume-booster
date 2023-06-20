@@ -17,11 +17,19 @@ import androidx.compose.ui.unit.dp
 fun _volume_button(
     modifier: Modifier = Modifier,
     label: String,
+    isSelected: Boolean = false,
     onClick: () -> Unit
 ) {
-    Box(contentAlignment = Alignment.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier.clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(
+                if (isSelected) {
+                    MaterialTheme.colorScheme.secondary
+                } else {
+                    MaterialTheme.colorScheme.surface
+                }
+            )
             .clickable { onClick() }
             .padding(4.dp)
     ) {

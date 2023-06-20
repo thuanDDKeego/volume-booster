@@ -100,20 +100,20 @@ fun _volume_boost_section(
 //                // do something with this position value
 //            }
 //        )
-        _circular_progress_indicator(
-            modifier = Modifier
-                .size(250.dp)
-                .background(Color.DarkGray),
-            initialValue = 50,
-            primaryColor = Color(0xFFFF5722),
-            secondaryColor = Color(0xFFAFAFAF),
-            progressSize = 230f,
-            circleRadius = 230f,
-            onValueChange = { position ->
-                Timber.d("onPositionChange $position")
-                // do something with this position value
-            }
-        )
+//        _old_circular_progress_indicator(
+//            modifier = Modifier
+//                .size(250.dp)
+//                .background(Color.DarkGray),
+//            initialValue = 50,
+//            primaryColor = Color(0xFFFF5722),
+//            secondaryColor = Color(0xFFAFAFAF),
+//            progressSize = 230f,
+//            circleRadius = 230f,
+//            onValueChange = { position ->
+//                Timber.d("onPositionChange $position")
+//                // do something with this position value
+//            }
+//        )
         Switch(
             checked = boostState.enable,
             onCheckedChange = { viewModel.toggleEnableBoost(context, it) }

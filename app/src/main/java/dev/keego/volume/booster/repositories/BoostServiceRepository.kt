@@ -73,7 +73,7 @@ class BoostServiceRepository(
         audioManager.setStreamVolume(
             AudioManager.STREAM_MUSIC, // Stream type
             value, // Volume index
-            AudioManager.FLAG_SHOW_UI // Flags
+            0// Flags
         )
     }
 
