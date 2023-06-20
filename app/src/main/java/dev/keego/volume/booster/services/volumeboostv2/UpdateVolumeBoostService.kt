@@ -1,4 +1,4 @@
-package dev.keego.volume.booster.services
+package dev.keego.volume.booster.services.volumeboostv2
 
 import android.app.*
 import android.content.Intent

@@ -14,13 +14,20 @@ class VolumeViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val visualizerData = volumeBoostRepository.visualizerArray
     val playbackState = notificationblayBackRepository.playback
+    val visualizerData = volumeBoostRepository.visualizerArray
+    val boostValue =  volumeBoostRepository.db
 
+    // range from 0 .. 400
     fun updateBoostValue(value: Int) {
+        volumeBoostRepository.updateBoostValue(value)
     }
 
     fun putPlaybackCommand(command: PlaybackCommand) {
         notificationblayBackRepository.putCommand(command)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
     }
 }

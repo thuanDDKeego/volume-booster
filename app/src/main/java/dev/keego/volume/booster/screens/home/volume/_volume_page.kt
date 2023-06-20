@@ -1,5 +1,6 @@
 package dev.keego.volume.booster.screens.home.volume
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,11 +31,12 @@ fun _volume_page(
     modifier: Modifier = Modifier,
     tag: TagTheme = TagTheme.DEFAULT
 ) {
+    val context = LocalContext.current as Activity
     val viewModel = hiltViewModel<VolumeViewModel>()
     val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
 
     val thirtyLambdaOnClick = remember<(Int) -> Unit> {
-        { viewModel.updateBoostValue(it) }
+        { viewModel.updateBoostValue(context, it) }
     }
     val putPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
         { viewModel.putPlaybackCommand(it) }
@@ -47,6 +51,9 @@ fun _volume_page(
         VolumeButton(label = "400%") { thirtyLambdaOnClick.invoke(400) },
         VolumeButton(label = "MAX") { thirtyLambdaOnClick.invoke(500) }
     )
+    LaunchedEffect(key1 = true) {
+        viewModel.initSettingContentObserver(context)
+    }
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
