@@ -67,11 +67,19 @@
 <!--            android:enabled="true"-->
 <!--            android:foregroundServiceType="mediaPlayback" />-->
 
+<!--        <service-->
+<!--            android:name=".services.UpdateVolumeBoostService"-->
+<!--            android:enabled="true"-->
+<!--            android:foregroundServiceType="mediaPlayback" />-->
+
         <service
-            android:name=".services.UpdateVolumeBoostService"
+            android:name=".services.EqualizerService"
             android:enabled="true"
             android:foregroundServiceType="mediaPlayback" />
-
+        <service
+            android:name=".services.VolumeBoostService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaPlayback" />
         <receiver
             android:name=".services.volumeboost.ServiceDispatcher"
             android:exported="true">
