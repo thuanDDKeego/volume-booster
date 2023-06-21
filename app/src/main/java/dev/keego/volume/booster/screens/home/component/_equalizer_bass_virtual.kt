@@ -28,12 +28,12 @@ import dev.keego.volume.booster.shared.utils.Dimensions.toPx
 fun _equalizer_bass_virtual(
     modifier: Modifier = Modifier,
     visualizerData: Int,
-    bassBoostRange: ClosedFloatingPointRange<Float> = 0f..1f,
-    virtualizeRange: ClosedFloatingPointRange<Float> = 0f..1f,
-    bassBoostValue: Float,
-    virtualizeValue: Float,
-    onBassBoostValueChange: (Float) -> Unit,
-    onVirtualizeValueChange: (Float) -> Unit
+    maxBassValue: Short = 1000,
+    maxVirtualizerValue: Short = 1000,
+    bassBoostValue: Short,
+    virtualizerValue: Short,
+    onBassBoostValueChange: (Int) -> Unit,
+    onVirtualizeValueChange: (Int) -> Unit
 ) {
     val context = LocalContext.current
     val displayMetrics = context.resources.displayMetrics
@@ -74,14 +74,14 @@ fun _equalizer_bass_virtual(
             _circular_progress_indicator(
                 modifier = modifier.wrapContentSize()
                     .background(Color.Gray),
-                value = 0,
+                value = bassBoostValue.toInt(),
+                maxValue = maxBassValue.toInt(),
                 primaryColor = MaterialTheme.colorScheme.primary,
                 secondaryColor = MaterialTheme.colorScheme.secondary,
                 progressSize = circularProgressSize.toDp(context),
-                circleRadius = circularProgressSize * 0.98f.toDp(context)
-            ) {
-                // TODO update bass
-            }
+                circleRadius = circularProgressSize * 0.98f.toDp(context),
+                onValueChange = onBassBoostValueChange
+            )
             Spacer(modifier = Modifier.height(4.dp))
             AutoSizeText(
                 text = stringResource(id = R.string.bass_boost),
@@ -101,14 +101,14 @@ fun _equalizer_bass_virtual(
             _circular_progress_indicator(
                 modifier = modifier.wrapContentSize()
                     .background(Color.Gray),
-                value = 0,
+                value = virtualizerValue.toInt(),
+                maxValue = maxVirtualizerValue.toInt(),
                 primaryColor = MaterialTheme.colorScheme.primary,
                 secondaryColor = MaterialTheme.colorScheme.secondary,
                 progressSize = circularProgressSize.toDp(context),
-                circleRadius = circularProgressSize * 0.98f.toDp(context)
-            ) {
-                // TODO update virtualize
-            }
+                circleRadius = circularProgressSize * 0.98f.toDp(context),
+                onValueChange = onVirtualizeValueChange
+            )
             Spacer(modifier = Modifier.height(4.dp))
             AutoSizeText(
                 text = stringResource(id = R.string.virtualize),

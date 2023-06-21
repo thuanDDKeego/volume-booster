@@ -3,8 +3,10 @@ package dev.keego.volume.booster.services.volumeboostv2
 import android.app.*
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.audiofx.BassBoost
 import android.media.audiofx.Equalizer
 import android.media.audiofx.LoudnessEnhancer
+import android.media.audiofx.Virtualizer
 import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.preference.PreferenceManager
@@ -41,6 +43,8 @@ class UpdateVolumeBoostService : Service() {
     private var on = true
     private var equalizer: Equalizer? = null
     private var visualizer: Visualizer? = null
+    private var bassBoost: BassBoost? = null
+    private var virtualizer: Virtualizer? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -109,6 +113,15 @@ class UpdateVolumeBoostService : Service() {
             )
             enabled = true // Configuration is done, can enable now...
         }
+        bassBoost = BassBoost(0, 0).apply {
+            setStrength(1000) // max strength
+            enabled = true
+        }
+
+        virtualizer = Virtualizer(0, 0).apply {
+            setStrength(1000) // max strength
+            enabled = true
+        }
     }
 
     private fun setupDefaultFrequencies() {
@@ -134,6 +147,8 @@ class UpdateVolumeBoostService : Service() {
             release()
         }
         equalizer?.release()
+        bassBoost?.release()
+        virtualizer?.release()
 
         if (GlobalVars.DEBUG_TOAST) {
             showToast("Service stopped")
@@ -220,6 +235,16 @@ class UpdateVolumeBoostService : Service() {
                 boostServiceRepository.bandValue.value.forEach {
                     adjustFrequency(it.first, it.second)
                 }
+            }
+
+            ServiceCommand.UPDATE_BASS -> {
+                val bassStrength = boostServiceRepository.bassStrength.value
+                bassBoost?.setStrength(bassStrength.toShort())
+            }
+
+            ServiceCommand.UPDATE_VIRTUALIZER -> {
+                val virtualizerStrength = boostServiceRepository.virtualizerStrength.value
+                virtualizer?.setStrength(virtualizerStrength.toShort())
             }
 
             ServiceCommand.PLAY -> {

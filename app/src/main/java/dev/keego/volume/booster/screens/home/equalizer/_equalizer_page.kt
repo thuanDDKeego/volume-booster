@@ -27,9 +27,21 @@ fun _equalizer_page(
 ) {
     val viewModel = hiltViewModel<EqualizerViewModel>()
     val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
+    val bassStrength by viewModel.bassStrength.collectAsStateWithLifecycle()
+    val virtualizerStrength by viewModel.virtualizerStrenth.collectAsStateWithLifecycle()
     val lambdaPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
         {
             viewModel.putPlaybackCommand(it)
+        }
+    }
+    val lambdaUpdateBoostStrenth = remember<(Int) -> Unit> {
+        {
+            viewModel.updateBassStrength(it.toShort())
+        }
+    }
+    val lambdaUpdateVirtualizerStrenth = remember<(Int) -> Unit> {
+        {
+            viewModel.updateVirtualizerStrength(it.toShort())
         }
     }
     Column(
@@ -39,10 +51,12 @@ fun _equalizer_page(
         _equalizer_bass_virtual(
             modifier = Modifier,
             visualizerData = visualizerData,
-            virtualizeValue = 0.5f,
-            bassBoostValue = 0.5f,
-            onBassBoostValueChange = {},
-            onVirtualizeValueChange = {}
+            virtualizerValue = virtualizerStrength,
+            bassBoostValue = bassStrength,
+            maxBassValue = 1000,
+            maxVirtualizerValue = 1000,
+            onBassBoostValueChange = lambdaUpdateBoostStrenth,
+            onVirtualizeValueChange = lambdaUpdateVirtualizerStrenth
         )
         _equalizer_frequencies(
             modifier = Modifier.padding(top = 24.dp).height(180.dp).fillMaxWidth(),

@@ -15,9 +15,11 @@ class EqualizerViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val visualizerData = volumeBoostRepository.visualizerArray
     val playbackState = notificationblayBackRepository.playback
+    val visualizerData = volumeBoostRepository.visualizerArray
     val bandLevel = volumeBoostRepository.bandValue
+    val bassStrength = volumeBoostRepository.bassStrength
+    val virtualizerStrenth = volumeBoostRepository.virtualizerStrength
 
     fun updateBoostValue(value: Int) {
     }
@@ -29,5 +31,13 @@ class EqualizerViewModel @Inject constructor(
     fun updateBandValue(frequency: Int, value: Int) {
         Timber.d("updateBandValue viewModel join $frequency --- $value")
         volumeBoostRepository.updateBandValue(frequency, value)
+    }
+
+    fun updateBassStrength(value: Short) {
+        volumeBoostRepository.updateBassStrength(value)
+    }
+
+    fun updateVirtualizerStrength(value: Short) {
+        volumeBoostRepository.updateVirtualizerStrength(value)
     }
 }

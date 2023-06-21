@@ -28,6 +28,12 @@ class BoostServiceRepository(
     private val _visualizerArray = MutableStateFlow<Int>(128)
     val visualizerArray = _visualizerArray.asStateFlow()
 
+    private val _bassStrength = MutableStateFlow<Short>(0)
+    val bassStrength = _bassStrength.asStateFlow()
+
+    private val _virtualierStrength = MutableStateFlow<Short>(0)
+    val virtualizerStrength = _virtualierStrength.asStateFlow()
+
     init {
         initSettingContentObserver()
     }
@@ -67,6 +73,24 @@ class BoostServiceRepository(
         updateDb()
     }
 
+    fun updateBassStrength(value: Short) {
+        _bassStrength.value = value
+        try {
+            EventBus.getDefault().post(ServiceCommand.UPDATE_BASS)
+        } catch (ignored: NumberFormatException) {
+            print(ignored)
+        }
+    }
+
+    fun updateVirtualizerStrength(value: Short) {
+        _virtualierStrength.value = value
+        try {
+            EventBus.getDefault().post(ServiceCommand.UPDATE_VIRTUALIZER)
+        } catch (ignored: NumberFormatException) {
+            print(ignored)
+        }
+    }
+
     // this value range from 0 to max volume of system, ex: 0..15
     private fun adjustVolumeSetting(value: Int) {
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -103,7 +127,7 @@ class BoostServiceRepository(
     * 1 to 100 is default volume
     * more 100, start boost
     * */
-    fun updateDb() {
+    private fun updateDb() {
         try {
             EventBus.getDefault().post(ServiceCommand.UPDATE)
         } catch (ignored: NumberFormatException) {

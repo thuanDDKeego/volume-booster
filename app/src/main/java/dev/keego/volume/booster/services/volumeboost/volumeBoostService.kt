@@ -172,6 +172,7 @@ class VolumeBoostService : Service() {
                 on = false
                 updateNotification()
             }
+            else -> {}
         }
         if (GlobalVars.DEBUG_TOAST) {
             Toast.makeText(this, "Received command: $command", Toast.LENGTH_SHORT).show()
