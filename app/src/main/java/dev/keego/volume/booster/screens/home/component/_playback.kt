@@ -2,6 +2,7 @@ package dev.keego.volume.booster.screens.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +36,7 @@ import dev.keego.volume.booster.screens.home.volume.VolumeViewModel
 @Composable
 fun _volume_playback(
     modifier: Modifier = Modifier,
+    onContentClick: () -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onPrevious: () -> Unit,
@@ -45,6 +47,7 @@ fun _volume_playback(
     _playback(
         modifier = modifier,
         playback = playback,
+        onContentClick = onContentClick,
         onPlay = onPlay,
         onPause = onPause,
         onPrevious = onPrevious,
@@ -55,6 +58,7 @@ fun _volume_playback(
 @Composable
 fun _equalizer_playback(
     modifier: Modifier = Modifier,
+    onContentClick: () -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onPrevious: () -> Unit,
@@ -65,6 +69,7 @@ fun _equalizer_playback(
     _playback(
         modifier = modifier,
         playback = playback,
+        onContentClick = onContentClick,
         onPlay = onPlay,
         onPause = onPause,
         onPrevious = onPrevious,
@@ -76,6 +81,7 @@ fun _equalizer_playback(
 private fun _playback(
     modifier: Modifier = Modifier,
     playback: PlayBackState,
+    onContentClick: () -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onPrevious: () -> Unit,
@@ -85,6 +91,9 @@ private fun _playback(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+            .clickable(enabled = false) {
+                onContentClick()
+            }
             .background(Color(playback.color))
             .padding(vertical = 12.dp, horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically

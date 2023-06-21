@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requirePermission()
+        ensureNotificationAccess()
         requireRecordAudio(this)
         setContent {
 //            val requestLauncher = registerForActivityResult()
@@ -120,6 +121,18 @@ class MainActivity : ComponentActivity() {
         val enabledListeners = NotificationManagerCompat.getEnabledListenerPackages(context)
 
         return enabledListeners.contains(packageName)
+    }
+
+    private fun ensureNotificationAccess() {
+        val notificationListenerEnabled = Settings.Secure.getString(
+            contentResolver,
+            "enabled_notification_listeners"
+        ).contains(applicationContext.packageName)
+
+        if (!notificationListenerEnabled) {
+            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+            startActivity(intent)
+        }
     }
 
     override fun onStart() {

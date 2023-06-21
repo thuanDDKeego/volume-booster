@@ -25,6 +25,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class NotificationHandlePlaybackService : NotificationListenerService() {
+    private var contentAction: PendingIntent? = null
     private var playPauseAction: Notification.Action? = null
     private var previousAction: Notification.Action? = null
     private var nextAction: Notification.Action? = null
@@ -37,7 +38,9 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
         super.onCreate()
         // Get all current notifications
         val currentNotifications = activeNotifications
-
+        Timber.d(
+            "NOTIFICATION_TAG title oncreate: currentNotifications ${currentNotifications.size}}"
+        )
         for (notification in currentNotifications) {
             // Do something with the notification
             val extras = notification.notification.extras
@@ -52,6 +55,10 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
             notificationPlaybackRepository.command.collect {
                 try {
                     when (it) {
+                        is PlaybackCommand.ContentClick -> {
+                            contentAction?.send()
+                        }
+
                         is PlaybackCommand.Play -> {
                             playPauseAction?.actionIntent?.send()
                         }
@@ -87,9 +94,7 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
         val smallIcon = extras.getParcelable<Bitmap>(Notification.EXTRA_SMALL_ICON)
         val mainColor = abs(notification.color)
         Timber.d("maincolorr  $mainColor")
-        val actions = notification.actions.apply {
-            forEach { it.actionIntent }
-        }
+        val actions = notification.actions?.onEach { it.actionIntent }
         val token =
             extras.getParcelable<MediaSession.Token>(Notification.EXTRA_MEDIA_SESSION)
         val mediaController: MediaController? = token?.let { MediaController(this, it) }
@@ -138,6 +143,7 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
                 }
             }
             actions?.let {
+                contentAction = notification.contentIntent
                 // action play pause thường ở giữa (ex: 5 -> 3, 3 -> 1)
                 if (actions.size < 3) return
                 val playPauseActionIndex = actions.map { it.title.toString() }

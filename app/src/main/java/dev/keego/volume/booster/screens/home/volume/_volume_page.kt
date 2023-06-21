@@ -102,6 +102,7 @@ fun _volume_page(
         }
         Spacer(modifier = Modifier.weight(1f))
         _volume_playback(
+            onContentClick = { putPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
             onPlay = { putPlaybackCommand.invoke(PlaybackCommand.Play) },
             onPause = { putPlaybackCommand.invoke(PlaybackCommand.Pause) },
             onPrevious = { putPlaybackCommand.invoke(PlaybackCommand.Previous) },

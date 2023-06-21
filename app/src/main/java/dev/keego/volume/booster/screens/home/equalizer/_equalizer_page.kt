@@ -65,6 +65,7 @@ fun _equalizer_page(
         )
         Spacer(modifier = Modifier.weight(1f))
         _equalizer_playback(
+            onContentClick = { lambdaPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
             onPlay = { lambdaPlaybackCommand.invoke(PlaybackCommand.Play) },
             onPause = { lambdaPlaybackCommand.invoke(PlaybackCommand.Pause) },
             onPrevious = { lambdaPlaybackCommand.invoke(PlaybackCommand.Previous) },
