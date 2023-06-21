@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.model.PlaybackCommand
 import dev.keego.volume.booster.repositories.NotificationPlaybackRepository
 import dev.keego.volume.booster.repositories.PlayBackState
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -86,13 +87,19 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
         val smallIcon = extras.getParcelable<Bitmap>(Notification.EXTRA_SMALL_ICON)
         val mainColor = abs(notification.color)
         Timber.d("maincolorr  $mainColor")
-        val actions = notification.actions
+        val actions = notification.actions.apply {
+            forEach { it.actionIntent }
+        }
         val token =
             extras.getParcelable<MediaSession.Token>(Notification.EXTRA_MEDIA_SESSION)
         val mediaController: MediaController? = token?.let { MediaController(this, it) }
         val playbackState = mediaController?.playbackState
         Timber.d(
-            "NOTIFICATION_TAG posted title: $song --- text: $artist --- actions size: ${actions?.size} --- token: $token --- playback ${playbackState?.state}"
+            "NOTIFICATION_TAG posted title: $song --- text: $artist --- actions: [${
+                actions?.joinToString {
+                    it.title.toString().lowercase(Locale.ENGLISH) + " "
+                }
+            }] --- token: $token --- playback ${playbackState?.state}"
         )
 
         token?.let {
@@ -104,7 +111,7 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
                             PlayBackState(
                                 song = song,
                                 artist = artist,
-                                thumb = notification.getLargeIcon().toBitmap(this),
+                                thumb = notification.getLargeIcon()?.toBitmap(this),
                                 color = mainColor,
                                 isPlaying = true
                             )
@@ -118,7 +125,7 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
                             PlayBackState(
                                 song = song,
                                 artist = artist,
-                                thumb = notification.getLargeIcon().toBitmap(this),
+                                thumb = notification.getLargeIcon()?.toBitmap(this),
                                 color = mainColor,
                                 isPlaying = false
                             )
@@ -133,6 +140,16 @@ class NotificationHandlePlaybackService : NotificationListenerService() {
             actions?.let {
                 // action play pause thường ở giữa (ex: 5 -> 3, 3 -> 1)
                 if (actions.size < 3) return
+                val playPauseActionIndex = actions.map { it.title.toString() }
+                    .indexOfFirst { it.lowercase() == "play" || it.lowercase() == "pause" }
+                if (playPauseActionIndex >= 1
+                ) {
+                    Timber.d("actions locale $playPauseActionIndex")
+                    playPauseAction = actions[playPauseActionIndex]
+                    previousAction = actions[playPauseActionIndex - 1]
+                    nextAction = actions[playPauseActionIndex + 1]
+                    return
+                }
                 playPauseAction = actions[actions.size / 2]
                 previousAction = actions[actions.size / 2 - 1]
                 nextAction = actions[actions.size / 2 + 1]

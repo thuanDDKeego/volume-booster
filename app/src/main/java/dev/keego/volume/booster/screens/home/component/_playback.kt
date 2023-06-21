@@ -93,13 +93,12 @@ private fun _playback(
             painter = playback.thumb?.let {
                 rememberAsyncImagePainter(model = it)
             } ?: painterResource(
-                id = R.drawable.ic_music
+                id = R.drawable.ic_vinyl
             ),
             modifier = Modifier
                 .size(42.dp)
                 .clip(shape = MaterialTheme.shapes.extraSmall)
-                .background(Color.White.copy(alpha = 0.5f))
-                .padding(if (playback.thumb == null) 4.dp else 0.dp),
+                .background(Color(0xFF81C784)),
             contentDescription = "song thumb"
         )
         Spacer(modifier = Modifier.width(8.dp))
