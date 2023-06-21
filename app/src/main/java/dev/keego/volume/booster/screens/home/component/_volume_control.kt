@@ -23,7 +23,11 @@ fun _volume_control(
     visualizerData: Int,
     // this value from 100 to 400
     boostValue: Int = 0,
-    rangeValue: IntRange = 0..300,
+    /* value from 100 to 400
+    * but this component, value must be started from 0
+    * so max value is 300
+    **/
+    maxBoostValue: Int = 300,
     tag: TagTheme = TagTheme.DEFAULT,
     onValueChange: (Int) -> Unit
 ) {
@@ -44,21 +48,17 @@ fun _volume_control(
             resolution = 1,
             visualizationData = visualizerData
         )
-//        Spacer(modifier = Modifier.weight(1f))
         _circular_progress_indicator(
             modifier = modifier.align(Alignment.Center).wrapContentSize()
                 .background(Color.Black),
             value = boostValue,
-            range = rangeValue,
+            maxValue = maxBoostValue,
             primaryColor = MaterialTheme.colorScheme.primary,
             secondaryColor = MaterialTheme.colorScheme.secondary,
             progressSize = (screenWidth * 0.5f).toDp(context),
-            circleRadius = (screenWidth * 0.45f).toDp(context)
-        ) {
-            // TODO update volume
-            onValueChange(it)
-        }
-//        Spacer(modifier = Modifier.weight(1f))
+            circleRadius = (screenWidth * 0.45f).toDp(context),
+            onValueChange = onValueChange
+        )
         _bar_visualizer(
             modifier = Modifier
                 .align(Alignment.CenterEnd)

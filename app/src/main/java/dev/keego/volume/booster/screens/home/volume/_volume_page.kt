@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -59,9 +58,8 @@ fun _volume_page(
         _volume_control(
             modifier = Modifier.fillMaxWidth(),
             visualizerData = visualizerData,
-            boostValue = max(0, boostValue - 100),
-
-            ) {value ->
+            boostValue = max(0, boostValue - 100)
+        ) { value ->
             lambdaUpdateBoostValue.invoke(value + 100)
         }
         _volume_slider(

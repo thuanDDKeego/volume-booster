@@ -234,11 +234,13 @@ fun _circular_progress_indicator(
     value: Int, // <- Passed from outside
     primaryColor: Color,
     secondaryColor: Color,
-    range: IntRange = 0..100,
+    // range always start from 0 to maxValue
+    maxValue: Int = 100,
     progressSize: Float,
     circleRadius: Float,
     onValueChange: (Int) -> Unit
 ) {
+    val range: IntRange = 0..maxValue
     val totalAngle = 240f
     var circleCenter by remember {
         mutableStateOf(Offset.Zero)
@@ -374,7 +376,7 @@ fun _circular_progress_indicator(
             val outerRadius = circleRadius + circleThickness / 2f
             val gap = 25f
             for (i in 0 until 100) {
-                val color = if (i*(range.last - range.first)/ 100f < value - range.first) {
+                val color = if (i * (range.last - range.first) / 100f < value - range.first) {
                     primaryColor
                 } else {
                     primaryColor.copy(alpha = 0.3f)

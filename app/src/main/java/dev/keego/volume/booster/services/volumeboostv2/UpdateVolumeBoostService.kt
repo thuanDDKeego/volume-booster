@@ -180,7 +180,7 @@ class UpdateVolumeBoostService : Service() {
                 levelRange?.let { range ->
                     Timber.d("range[0] ${range[0]} range[1] ${range[1]}")
                     val defaultLevel = (range[0] + range[1]) / 2
-                    defaultBandLevels[i.toInt()] = defaultLevel
+                    defaultBandLevels[i] = defaultLevel
                 }
             }
         }
@@ -210,7 +210,7 @@ class UpdateVolumeBoostService : Service() {
                 if (boostValue <= 100) {
                     enhancer?.setTargetGain(0)
                 } else {
-                    enhancer?.setTargetGain(boostServiceRepository.db.value)
+                    enhancer?.setTargetGain(boostServiceRepository.db.value * 10)
                     updateNotification()
                 }
             }

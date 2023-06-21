@@ -52,7 +52,6 @@ class BoostServiceRepository(
     * if > 100: adjust volume device to max, then start boost
     */
     fun updateBoostValue(value: Int) {
-        _db.value = value
         val maxVolumeValue = getMaxVolume()
         if (value <= 100) {
             val newVolumeValue =
@@ -64,6 +63,7 @@ class BoostServiceRepository(
             adjustVolumeSetting(maxVolumeValue)
             // start update boost service
         }
+        _db.value = value
         updateDb()
     }
 
@@ -73,7 +73,7 @@ class BoostServiceRepository(
         audioManager.setStreamVolume(
             AudioManager.STREAM_MUSIC, // Stream type
             value, // Volume index
-            0// Flags
+            0 // Flags
         )
     }
 
