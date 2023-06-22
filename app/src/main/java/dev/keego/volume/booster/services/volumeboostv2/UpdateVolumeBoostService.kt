@@ -239,12 +239,12 @@ class UpdateVolumeBoostService : Service() {
 
             ServiceCommand.UPDATE_BASS -> {
                 val bassStrength = boostServiceRepository.bassStrength.value
-                bassBoost?.setStrength(bassStrength.toShort())
+                bassBoost?.setStrength(bassStrength)
             }
 
             ServiceCommand.UPDATE_VIRTUALIZER -> {
                 val virtualizerStrength = boostServiceRepository.virtualizerStrength.value
-                virtualizer?.setStrength(virtualizerStrength.toShort())
+                virtualizer?.setStrength(virtualizerStrength)
             }
 
             ServiceCommand.PLAY -> {
@@ -259,6 +259,14 @@ class UpdateVolumeBoostService : Service() {
                 enhancer?.enabled = false
                 on = false
                 updateNotification()
+            }
+
+            ServiceCommand.TOGGLE_EQUALIZER -> {
+                if (boostServiceRepository.enableEqualizer.value) {
+                    enableEqualizer()
+                } else {
+                    disableEqualizer()
+                }
             }
         }
         if (GlobalVars.DEBUG_TOAST) {
@@ -277,6 +285,22 @@ class UpdateVolumeBoostService : Service() {
     @Subscribe
     fun handleOnQuery(query: ServiceQueryOn) {
         EventBus.getDefault().post(QueryReplyOn(on))
+    }
+
+    fun disableEqualizer() {
+        boostServiceRepository.bandValue.value.forEach {
+            adjustFrequency(it.first, 0)
+        }
+        bassBoost?.setStrength(0)
+        virtualizer?.setStrength(0)
+    }
+
+    fun enableEqualizer() {
+        boostServiceRepository.bandValue.value.forEach {
+            adjustFrequency(it.first, it.second)
+            bassBoost?.setStrength(boostServiceRepository.bassStrength.value)
+            virtualizer?.setStrength(boostServiceRepository.virtualizerStrength.value)
+        }
     }
 
     private fun startForeground() {

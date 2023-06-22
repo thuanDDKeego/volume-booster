@@ -22,6 +22,7 @@ import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 @Composable
 fun _equalizer_frequencies(
     modifier: Modifier = Modifier,
+    enable: Boolean,
     numberOfFrequencies: Int = 5,
     onFrequencyChange: (Pair<Int, Int>) -> Unit
 ) {
@@ -44,6 +45,7 @@ fun _equalizer_frequencies(
             ) {
                 _equalizer_slider(
                     modifier = Modifier.weight(1f),
+                    enabled = enable,
                     value = frequencyValue.toFloat(),
                     valueRange = -1500f..1500f,
                     onValueChange = {value ->

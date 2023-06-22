@@ -16,12 +16,14 @@ class EqualizerViewModel @Inject constructor(
     ViewModel() {
 
     val playbackState = notificationblayBackRepository.playback
+    val enable = volumeBoostRepository.enableEqualizer
     val visualizerData = volumeBoostRepository.visualizerArray
     val bandLevel = volumeBoostRepository.bandValue
     val bassStrength = volumeBoostRepository.bassStrength
     val virtualizerStrenth = volumeBoostRepository.virtualizerStrength
 
-    fun updateBoostValue(value: Int) {
+    fun toggleEnableEqualizer(value: Boolean) {
+        volumeBoostRepository.toggleEnableEqualizer(value)
     }
 
     fun putPlaybackCommand(command: PlaybackCommand) {

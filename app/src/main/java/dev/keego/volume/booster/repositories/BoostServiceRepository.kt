@@ -20,6 +20,9 @@ class BoostServiceRepository(
     private val _enable = MutableStateFlow(false)
     val enable = _enable.asStateFlow()
 
+    private val _enableEqualizer = MutableStateFlow(true)
+    val enableEqualizer = _enableEqualizer.asStateFlow()
+
     // init value follow current value volume
     private val _db = MutableStateFlow<Int>(getCurrentValue())
     val db = _db.asStateFlow()
@@ -119,6 +122,15 @@ class BoostServiceRepository(
             ServiceDispatcher.startService(context)
         } else {
             ServiceDispatcher.stopService(context)
+        }
+    }
+
+    fun toggleEnableEqualizer(enable: Boolean) {
+        _enableEqualizer.value = enable
+        try {
+            EventBus.getDefault().post(ServiceCommand.TOGGLE_EQUALIZER)
+        } catch (ignored: NumberFormatException) {
+            print(ignored)
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -234,12 +235,15 @@ fun _circular_progress_indicator(
     value: Int, // <- Passed from outside
     primaryColor: Color,
     secondaryColor: Color,
+    enable: Boolean = true,
     // range always start from 0 to maxValue
     maxValue: Int = 100,
     progressSize: Float,
     circleRadius: Float,
     onValueChange: (Int) -> Unit
 ) {
+    val primaryColor = if(enable) primaryColor else Color(0xFF555555)
+    val secondaryColor = if(enable) secondaryColor else Color(0xFF2B2B2B)
     val range: IntRange = 0..maxValue
     val totalAngle = 240f
     var circleCenter by remember {
@@ -269,35 +273,36 @@ fun _circular_progress_indicator(
             modifier = modifier
                 .size(width = progressSize.dp, height = progressSize.dp)
                 .pointerInput(true) {
-                    detectDragGestures(
-                        onDragStart = { offset ->
-                            dragStartedAngle = -atan2(
-                                x = circleCenter.y - offset.y,
-                                y = circleCenter.x - offset.x
-                            ) * (180f / PI).toFloat()
-                            dragStartedAngle = (dragStartedAngle + (totalAngle / 2f))
-                        },
-                        onDrag = { change, _ ->
-                            var touchAngle = -atan2(
-                                x = circleCenter.y - change.position.y,
-                                y = circleCenter.x - change.position.x
-                            ) * (180f / PI).toFloat()
-                            touchAngle = (touchAngle + (totalAngle / 2f))
-                            changeAngle = touchAngle -
-                                oldPositionValue *
-                                totalAngle / (range.last - range.first)
+                    if(enable) {
+                        detectDragGestures(
+                            onDragStart = { offset ->
+                                dragStartedAngle = -atan2(
+                                    x = circleCenter.y - offset.y,
+                                    y = circleCenter.x - offset.x
+                                ) * (180f / PI).toFloat()
+                                dragStartedAngle = (dragStartedAngle + (totalAngle / 2f))
+                            },
+                            onDrag = { change, _ ->
+                                var touchAngle = -atan2(
+                                    x = circleCenter.y - change.position.y,
+                                    y = circleCenter.x - change.position.x
+                                ) * (180f / PI).toFloat()
+                                touchAngle = (touchAngle + (totalAngle / 2f))
+                                changeAngle = touchAngle -
+                                        oldPositionValue *
+                                        totalAngle / (range.last - range.first)
 
-                            val currentAngle =
-                                oldPositionValue * totalAngle / ((range.last - range.first))
-                            changeAngle = touchAngle - currentAngle
-                            val lowerThreshold =
-                                currentAngle - totalAngle / (range.last - range.first) * 5
-                            val higherThreshold =
-                                currentAngle + totalAngle / (range.last - range.first) * 5
+                                val currentAngle =
+                                    oldPositionValue * totalAngle / ((range.last - range.first))
+                                changeAngle = touchAngle - currentAngle
+                                val lowerThreshold =
+                                    currentAngle - totalAngle / (range.last - range.first) * 5
+                                val higherThreshold =
+                                    currentAngle + totalAngle / (range.last - range.first) * 5
 
 //                            if (dragStartedAngle in lowerThreshold..higherThreshold) {
-                            val newPosition =
-                                (oldPositionValue + (changeAngle / (totalAngle / (range.last - range.first))).roundToInt())
+                                val newPosition =
+                                    (oldPositionValue + (changeAngle / (totalAngle / (range.last - range.first))).roundToInt())
 //                            positionValue = if (newPosition in range) {
 //                                Timber.d(
 //                                    "circular log: join if $newPosition $oldPositionValue $changeAngle"
@@ -315,19 +320,20 @@ fun _circular_progress_indicator(
 //                                range.first
 //                            }
 //                            onValueChange(positionValue)
-                            onValueChange(
-                                if (newPosition in range) newPosition else if (newPosition > range.last) range.last else range.first
-                            )
+                                onValueChange(
+                                    if (newPosition in range) newPosition else if (newPosition > range.last) range.last else range.first
+                                )
 //                            }
-                            Timber.d(
-                                "circular log: $currentAngle $dragStartedAngle $lowerThreshold $higherThreshold"
-                            )
-                        },
-                        onDragEnd = {
+                                Timber.d(
+                                    "circular log: $currentAngle $dragStartedAngle $lowerThreshold $higherThreshold"
+                                )
+                            },
+                            onDragEnd = {
 //                            oldPositionValue = value // <- Use value instead of positionValue
 //                            onValueChange(value)
-                        }
-                    )
+                            }
+                        )
+                    }
                 }
         ) {
             var width = size.width

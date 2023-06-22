@@ -27,6 +27,7 @@ import dev.keego.volume.booster.shared.utils.Dimensions.toPx
 @Composable
 fun _equalizer_bass_virtual(
     modifier: Modifier = Modifier,
+    enable: Boolean,
     visualizerData: Int,
     maxBassValue: Short = 1000,
     maxVirtualizerValue: Short = 1000,
@@ -74,6 +75,7 @@ fun _equalizer_bass_virtual(
             _circular_progress_indicator(
                 modifier = modifier.wrapContentSize()
                     .background(Color.Gray),
+                enable = enable,
                 value = bassBoostValue.toInt(),
                 maxValue = maxBassValue.toInt(),
                 primaryColor = MaterialTheme.colorScheme.primary,
@@ -101,6 +103,7 @@ fun _equalizer_bass_virtual(
             _circular_progress_indicator(
                 modifier = modifier.wrapContentSize()
                     .background(Color.Gray),
+                enable = enable,
                 value = virtualizerValue.toInt(),
                 maxValue = maxVirtualizerValue.toInt(),
                 primaryColor = MaterialTheme.colorScheme.primary,

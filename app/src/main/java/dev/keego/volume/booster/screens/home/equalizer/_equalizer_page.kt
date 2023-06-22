@@ -18,6 +18,7 @@ import dev.keego.volume.booster.model.PlaybackCommand
 import dev.keego.volume.booster.screens.home.component._equalizer_bass_virtual
 import dev.keego.volume.booster.screens.home.component._equalizer_frequencies
 import dev.keego.volume.booster.screens.home.component._equalizer_playback
+import dev.keego.volume.booster.screens.home.component._equalizer_preset
 import dev.keego.volume.booster.shared.tag.TagTheme
 
 @Composable
@@ -29,6 +30,7 @@ fun _equalizer_page(
     val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
     val bassStrength by viewModel.bassStrength.collectAsStateWithLifecycle()
     val virtualizerStrength by viewModel.virtualizerStrenth.collectAsStateWithLifecycle()
+    val enable by viewModel.enable.collectAsStateWithLifecycle()
     val lambdaPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
         {
             viewModel.putPlaybackCommand(it)
@@ -48,8 +50,15 @@ fun _equalizer_page(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        _equalizer_preset(
+            modifier = Modifier.padding(16.dp),
+            enable = enable
+        ) {
+            viewModel.toggleEnableEqualizer(it)
+        }
         _equalizer_bass_virtual(
             modifier = Modifier,
+            enable = enable,
             visualizerData = visualizerData,
             virtualizerValue = virtualizerStrength,
             bassBoostValue = bassStrength,
@@ -61,6 +70,7 @@ fun _equalizer_page(
         _equalizer_frequencies(
             modifier = Modifier.padding(top = 24.dp).height(180.dp).fillMaxWidth(),
 //            frequenciesData = listOf(),
+            enable = enable,
             onFrequencyChange = {}
         )
         Spacer(modifier = Modifier.weight(1f))
