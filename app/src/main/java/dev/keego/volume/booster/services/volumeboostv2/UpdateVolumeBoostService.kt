@@ -1,6 +1,9 @@
 package dev.keego.volume.booster.services.volumeboostv2
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
@@ -18,7 +21,11 @@ import dev.keego.volume.booster.BuildConfig
 import dev.keego.volume.booster.MainActivity
 import dev.keego.volume.booster.R
 import dev.keego.volume.booster.section.repositories.BoostServiceRepository
-import dev.keego.volume.booster.services.messages.*
+import dev.keego.volume.booster.services.messages.QueryReplyOn
+import dev.keego.volume.booster.services.messages.QueryReplyPing
+import dev.keego.volume.booster.services.messages.ServiceCommand
+import dev.keego.volume.booster.services.messages.ServiceQueryOn
+import dev.keego.volume.booster.services.messages.ServiceQueryPing
 import dev.keego.volume.booster.services.volumeboost.GlobalVars
 import dev.keego.volume.booster.services.volumeboost.NotificationChannelHelper
 import javax.inject.Inject
@@ -118,13 +125,20 @@ class UpdateVolumeBoostService : Service() {
         val audioSessionId = mediaPlayer.audioSessionId
         Timber.d("audioSessionId $audioSessionId")
         bassBoost = BassBoost(0, 0).apply {
-
-//            setStrength(1000) // max strength
+            try {
+                setStrength(1000) // max strength
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
             enabled = true
         }
 
         virtualizer = Virtualizer(0, 0).apply {
-//            setStrength(1000) // max strength
+            try {
+                setStrength(1000) // max strength
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
             enabled = true
         }
     }

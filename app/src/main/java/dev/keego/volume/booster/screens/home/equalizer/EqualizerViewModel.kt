@@ -3,6 +3,7 @@ package dev.keego.volume.booster.screens.home.equalizer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.keego.volume.booster.R
 import dev.keego.volume.booster.section.local.preset.Preset
 import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.section.repositories.BoostServiceRepository
@@ -33,13 +34,13 @@ class EqualizerViewModel @Inject constructor(
     private val _presets = MutableStateFlow<List<Preset>>(listOf())
     val presets = _presets.asStateFlow()
 
-    private val _currentPreset = MutableStateFlow<Preset?>(null)
+    private val _currentPreset = MutableStateFlow(customPreset)
     val currentPreset = _currentPreset.asStateFlow()
 
     init {
         viewModelScope.launch {
             presetRepository.getAll().collectLatest {
-                _presets.value = it
+                _presets.value = it.sortedBy { -it.timeCreated }
             }
         }
     }
@@ -55,6 +56,12 @@ class EqualizerViewModel @Inject constructor(
     fun updateBandValue(frequency: Int, value: Int) {
         Timber.d("updateBandValue viewModel join $frequency --- $value")
         volumeBoostRepository.updateBandValue(frequency, value)
+        customPreset = customPreset.copy(
+            bandLevels = bandLevel.value.map { i ->
+                i.second
+            }
+        )
+        _currentPreset.value = customPreset
     }
 
     fun updateBassStrength(value: Short) {
@@ -80,4 +87,41 @@ class EqualizerViewModel @Inject constructor(
     fun updateCurrentPreset(preset: Preset) {
         _currentPreset.value = preset
     }
+
+    fun updateFrequenciesFollowPreset() {
+        bandLevel.value.forEachIndexed { index, fre ->
+            volumeBoostRepository.updateBandValue(fre.first, currentPreset.value.bandLevels[index])
+        }
+    }
+
+    fun savePreset() {
+        viewModelScope.launch {
+            var counter = 1
+            var newCustomPresetName = "Custom $counter"
+            while (_presets.value.any { it.name == newCustomPresetName }) {
+                newCustomPresetName = "Custom ${++counter}"
+            }
+            presetRepository.insert(
+                _currentPreset.value.copy(
+                    id = 0,
+                    name = newCustomPresetName,
+                    timeCreated = System.currentTimeMillis()
+                )
+            )
+        }
+    }
+
+    fun revertPreset() {
+        bandLevel.value.forEach {
+            updateBandValue(it.first, 0)
+        }
+    }
 }
+
+var customPreset = Preset(
+    id = -1,
+    name = "Custom",
+    isDefault = false,
+    thumb = R.drawable.ic_vinyl,
+    bandLevels = listOf(0, 0, 0, 0, 0)
+)

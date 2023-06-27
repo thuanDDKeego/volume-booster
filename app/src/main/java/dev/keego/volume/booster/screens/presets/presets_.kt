@@ -1,11 +1,15 @@
 package dev.keego.volume.booster.screens.presets
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -24,11 +28,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -41,24 +45,29 @@ import dev.keego.volume.booster.shared.ui._general_top_bar
 @Destination
 fun presets_(
     navigator: DestinationsNavigator,
-    viewModel: EqualizerViewModel = hiltViewModel()
+    viewModel: EqualizerViewModel
 ) {
     val presets by viewModel.presets.collectAsStateWithLifecycle()
     val currentPreset by viewModel.currentPreset.collectAsStateWithLifecycle()
+
+    val customBackHandler = { navigator.navigateUp() }
+    BackHandler {
+        customBackHandler.invoke()
+    }
     Scaffold(
         topBar = {
             _general_top_bar(
                 title = {
                     Text(
                         text = stringResource(id = R.string.presets),
-                        style = MaterialTheme.typography.labelMedium.copy(
+                        style = MaterialTheme.typography.titleMedium.copy(
                             MaterialTheme.colorScheme.onSurface
                         )
                     )
                 },
                 navigation = {
                     IconButton(onClick = {
-                        navigator.navigateUp()
+                        customBackHandler()
                     }) {
                         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = "back")
                     }
@@ -79,7 +88,7 @@ fun presets_(
                 items(items = presets, key = { it.id }) { preset ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable(enabled = false) {
+                        modifier = Modifier.clickable(enabled = true) {
                             viewModel.updateCurrentPreset(preset)
                         }
                     ) {
@@ -88,20 +97,29 @@ fun presets_(
                             contentDescription = "preset thumb",
                             modifier = Modifier
                                 .padding(4.dp)
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
                                 .clip(RoundedCornerShape(16.dp))
                                 .border(
-                                    width = if (currentPreset?.id == preset.id) (1.5).dp else 0.dp,
-                                    color = MaterialTheme.colorScheme.secondary
-                                )
+                                    width = if (currentPreset.id == preset.id) (1.5).dp else 0.dp,
+                                    color = if (currentPreset.id == preset.id) {
+                                        MaterialTheme.colorScheme.secondary
+                                    } else {
+                                        MaterialTheme.colorScheme.surface
+                                    },
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentScale = ContentScale.Crop
                         )
                         Text(
                             text = preset.name,
-                            style = MaterialTheme.typography.labelMedium.copy(
+                            style = MaterialTheme.typography.titleSmall.copy(
                                 color = MaterialTheme.colorScheme.onBackground
                             ),
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
             }

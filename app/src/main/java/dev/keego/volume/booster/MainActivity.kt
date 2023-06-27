@@ -20,10 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.screens.NavGraphs
+import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 import dev.keego.volume.booster.screens.home.home_
 import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceQueryPing
@@ -64,7 +67,11 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier,
                         navGraph = NavGraphs.root,
                         engine = engine,
-                        navController = navController
+                        navController = navController,
+                        dependenciesContainerBuilder = { // this: DependenciesContainerBuilder<*>
+                            // 👇 To tie ActivityViewModel to the activity, making it available to all destinations
+                            dependency(hiltViewModel<EqualizerViewModel>(this@MainActivity))
+                        }
                     )
                 }
             }

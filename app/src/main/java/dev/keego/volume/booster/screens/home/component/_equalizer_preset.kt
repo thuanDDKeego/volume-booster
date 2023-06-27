@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -30,11 +31,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.keego.volume.booster.R
+import dev.keego.volume.booster.section.local.preset.Preset
 
 @Composable
 fun _equalizer_preset(
     modifier: Modifier = Modifier,
     enable: Boolean = true,
+    preset: Preset,
+    onPresetClick: () -> Unit,
+    onSaveClick: () -> Unit,
+    onRevertClick: () -> Unit,
     onToggleEnable: (Boolean) -> Unit
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
@@ -42,10 +48,10 @@ fun _equalizer_preset(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.clip(RoundedCornerShape(12.dp))
                 .border(2.dp, MaterialTheme.colorScheme.onBackground, RoundedCornerShape(12.dp))
-                .clickable {}
+                .clickable { onPresetClick() }
         ) {
             Text(
-                text = "Custom",
+                text = preset.name,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -69,7 +75,7 @@ fun _equalizer_preset(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.clip(RoundedCornerShape(12.dp))
-                .clickable { }
+                .clickable { onSaveClick() }
                 .padding(8.dp)
         ) {
             Icon(
@@ -82,11 +88,11 @@ fun _equalizer_preset(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.clip(RoundedCornerShape(12.dp))
-                .clickable { }
+                .clickable { onRevertClick() }
                 .padding(8.dp)
         ) {
             Icon(
-                imageVector = Icons.Rounded.Add,
+                imageVector = Icons.Rounded.MoreVert,
                 contentDescription = "",
                 modifier = Modifier.size(20.dp)
             )

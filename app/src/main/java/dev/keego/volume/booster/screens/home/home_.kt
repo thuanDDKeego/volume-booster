@@ -34,6 +34,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.keego.volume.booster.R
+import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 import dev.keego.volume.booster.screens.home.equalizer._equalizer_page
 import dev.keego.volume.booster.screens.home.volume._volume_page
 import dev.keego.volume.booster.shared.ui._general_top_bar
@@ -48,7 +49,10 @@ private const val PAGE_NUMBER = 2
 @RootNavGraph(start = true)
 @Destination
 @Composable
-fun home_(navigator: DestinationsNavigator) {
+fun home_(
+    navigator: DestinationsNavigator,
+    viewModel: EqualizerViewModel
+) {
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -115,7 +119,9 @@ fun home_(navigator: DestinationsNavigator) {
 
                         else -> {
                             _equalizer_page(
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
+                                navigator = navigator,
+                                viewModel = viewModel
                             )
                         }
                     }

@@ -1,5 +1,6 @@
 package dev.keego.volume.booster.screens.home.component
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,19 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
+import com.google.common.collect.ImmutableList
+import dev.keego.volume.booster.section.local.preset.Preset
 
 @Composable
 fun _equalizer_frequencies(
     modifier: Modifier = Modifier,
     enable: Boolean,
+    frequenciesData: ImmutableList<Pair<Int, Int>>,
+    preset: Preset,
     numberOfFrequencies: Int = 5,
     onFrequencyChange: (Pair<Int, Int>) -> Unit
 ) {
-    val viewModel = hiltViewModel<EqualizerViewModel>()
-    val frequenciesData by viewModel.bandLevel.collectAsStateWithLifecycle()
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -43,17 +43,17 @@ fun _equalizer_frequencies(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.weight(1f)
             ) {
+                val frequencyAnimateValue by animateFloatAsState(
+                    targetValue = frequencyValue.toFloat()
+                )
                 _equalizer_slider(
                     modifier = Modifier.weight(1f),
                     enabled = enable,
-                    value = frequencyValue.toFloat(),
+                    value = frequencyAnimateValue,
                     valueRange = -1500f..1500f,
-                    onValueChange = {value ->
+                    onValueChange = { value ->
                         if (frequenciesData.size > i) {
-                            viewModel.updateBandValue(
-                                frequenciesData[i].first,
-                                value.toInt()
-                            )
+                            onFrequencyChange(Pair(frequenciesData[i].first, value.toInt()))
                         }
                     }
                 )
