@@ -10,13 +10,14 @@ import javax.inject.Inject
 @HiltViewModel
 class VolumeViewModel @Inject constructor(
     private val volumeBoostRepository: BoostServiceRepository,
-    private val notificationblayBackRepository: NotificationPlaybackRepository
+    private val notificationplayBackRepository: NotificationPlaybackRepository
 ) :
     ViewModel() {
 
-    val playbackState = notificationblayBackRepository.playback
+    val playbackState = notificationplayBackRepository.playback
     val visualizerData = volumeBoostRepository.visualizerArray
-    val boostValue =  volumeBoostRepository.db
+    val boostValue = volumeBoostRepository.db
+    val color = notificationplayBackRepository.color
 
     // range from 0 .. 400
     fun updateBoostValue(value: Int) {
@@ -24,7 +25,7 @@ class VolumeViewModel @Inject constructor(
     }
 
     fun putPlaybackCommand(command: PlaybackCommand) {
-        notificationblayBackRepository.putCommand(command)
+        notificationplayBackRepository.putCommand(command)
     }
 
     override fun onCleared() {

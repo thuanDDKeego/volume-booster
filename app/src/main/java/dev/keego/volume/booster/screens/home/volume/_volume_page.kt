@@ -16,11 +16,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.screens.home.component._volume_button
 import dev.keego.volume.booster.screens.home.component._volume_control
 import dev.keego.volume.booster.screens.home.component._volume_playback
 import dev.keego.volume.booster.screens.home.component._volume_slider
+import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.shared.tag.TagTheme
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -34,6 +34,7 @@ fun _volume_page(
     val viewModel = hiltViewModel<VolumeViewModel>()
     val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
     val boostValue by viewModel.boostValue.collectAsStateWithLifecycle()
+    val colorPlayback by viewModel.color.collectAsStateWithLifecycle()
 
     val lambdaUpdateBoostValue = remember<(Int) -> Unit> {
         { viewModel.updateBoostValue(it) }
@@ -102,6 +103,7 @@ fun _volume_page(
         }
         Spacer(modifier = Modifier.weight(1f))
         _volume_playback(
+            color = colorPlayback,
             onContentClick = { putPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
             onPlay = { putPlaybackCommand.invoke(PlaybackCommand.Play) },
             onPause = { putPlaybackCommand.invoke(PlaybackCommand.Pause) },

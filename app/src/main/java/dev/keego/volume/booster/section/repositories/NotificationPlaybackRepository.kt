@@ -30,6 +30,9 @@ class NotificationPlaybackRepository {
     private val _playback = MutableStateFlow<PlayBackState>(PlayBackState())
     val playback = _playback.asStateFlow()
 
+    private val _color = MutableStateFlow<Int>(0xFF459948.toInt())
+    val color = _color.asStateFlow()
+
     private val _command = MutableSharedFlow<PlaybackCommand?>()
     val command = _command.asSharedFlow()
 
@@ -53,12 +56,17 @@ class NotificationPlaybackRepository {
 
     fun updatePlayBack(playback: PlayBackState) {
         _playback.value = playback
-//        if (playback.thumb != null) {
-//            CoroutineScope(Dispatchers.Default).launch {
-//                val mainColor = getDominantColor(playback.thumb) ?: return@launch
-//                _playback.value = playback.copy(color = mainColor)
-//            }
-//        }
+        if (playback.thumb != null) {
+            CoroutineScope(Dispatchers.Default).launch {
+                val mainColor = getDominantColor(playback.thumb) ?: return@launch
+                if (isColorful(mainColor)) {
+                    _color.value = ensureDarkColor(mainColor)
+                }
+//                else {
+//                    _color.value = ensureDarkColor(mainColor)
+//                }
+            }
+        }
     }
 
     fun removePlayBack() {
@@ -93,6 +101,12 @@ class NotificationPlaybackRepository {
             hsv[2] *= 0.8f // reduce brightness by 20%
             Color.HSVToColor(hsv)
         }
+    }
+
+    suspend fun isColorful(color: Int): Boolean = withContext(Dispatchers.Default) {
+        val hsv = FloatArray(3)
+        Color.colorToHSV(color, hsv)
+        hsv[1] > 0.5 // saturation value greater than 0.5 is considered colorful
     }
 }
 

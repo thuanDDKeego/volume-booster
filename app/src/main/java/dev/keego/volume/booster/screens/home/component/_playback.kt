@@ -1,5 +1,7 @@
 package dev.keego.volume.booster.screens.home.component
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,13 +31,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.section.repositories.PlayBackState
 import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 import dev.keego.volume.booster.screens.home.volume.VolumeViewModel
+import dev.keego.volume.booster.section.repositories.PlayBackState
 
 @Composable
 fun _volume_playback(
     modifier: Modifier = Modifier,
+    color: Int,
     onContentClick: () -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
@@ -46,6 +49,7 @@ fun _volume_playback(
     val playback by viewModel.playbackState.collectAsStateWithLifecycle()
     _playback(
         modifier = modifier,
+        color = color,
         playback = playback,
         onContentClick = onContentClick,
         onPlay = onPlay,
@@ -81,12 +85,14 @@ fun _equalizer_playback(
 private fun _playback(
     modifier: Modifier = Modifier,
     playback: PlayBackState,
+    color: Int = 0xFF539956.toInt(),
     onContentClick: () -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
+    val color by animateColorAsState(targetValue = Color(color), tween(durationMillis = 300))
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -94,7 +100,7 @@ private fun _playback(
             .clickable(enabled = false) {
                 onContentClick()
             }
-            .background(Color(playback.color))
+            .background(color)
             .padding(vertical = 12.dp, horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
