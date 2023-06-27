@@ -43,7 +43,7 @@ private const val PAGE_NUMBER = 2
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class
 )
 @RootNavGraph(start = true)
 @Destination
@@ -56,7 +56,7 @@ fun home_(navigator: DestinationsNavigator) {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet { /* Drawer content */ }
-        },
+        }
     ) {
         Scaffold(
             topBar = {
@@ -75,7 +75,7 @@ fun home_(navigator: DestinationsNavigator) {
                     title = {
                         Text(
                             text = stringResource(id = R.string.volume_booster),
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium
                         )
                     },
                     actions = {
@@ -89,12 +89,12 @@ fun home_(navigator: DestinationsNavigator) {
                         }) {
                             Icon(
                                 imageVector = Icons.Rounded.Phone,
-                                contentDescription = "Edge Lighting",
+                                contentDescription = "Edge Lighting"
                             )
                         }
-                    },
+                    }
                 )
-            },
+            }
         ) {
             Box(modifier = Modifier.fillMaxSize().padding(it)) {
                 /*TODO update here*/
@@ -109,13 +109,13 @@ fun home_(navigator: DestinationsNavigator) {
                     when (page) {
                         0 -> {
                             _volume_page(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
 
                         else -> {
                             _equalizer_page(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
                     }
@@ -128,7 +128,7 @@ fun home_(navigator: DestinationsNavigator) {
                             scope.launch {
                                 pagerState.animateScrollToPage(0)
                             }
-                        },
+                        }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -137,7 +137,7 @@ fun home_(navigator: DestinationsNavigator) {
                             scope.launch {
                                 pagerState.animateScrollToPage(1)
                             }
-                        },
+                        }
                     )
                 }
             }

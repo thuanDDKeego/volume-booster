@@ -1,4 +1,4 @@
-package dev.keego.volume.booster.model
+package dev.keego.volume.booster.section.model
 
 sealed class PlaybackCommand() {
     object ContentClick : PlaybackCommand()

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.keego.volume.booster.model.PlaybackCommand
+import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.screens.home.component._equalizer_bass_virtual
 import dev.keego.volume.booster.screens.home.component._equalizer_frequencies
 import dev.keego.volume.booster.screens.home.component._equalizer_playback

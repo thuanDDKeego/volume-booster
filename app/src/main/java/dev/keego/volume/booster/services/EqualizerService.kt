@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.BuildConfig
 import dev.keego.volume.booster.MainActivity
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.repositories.BoostServiceRepository
+import dev.keego.volume.booster.section.repositories.BoostServiceRepository
 import dev.keego.volume.booster.services.messages.QueryReplyOn
 import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceCommand

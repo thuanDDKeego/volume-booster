@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.keego.volume.booster.repositories.BoostServiceRepository
+import dev.keego.volume.booster.section.repositories.BoostServiceRepository
 import javax.inject.Singleton
 
 @Module

@@ -1,4 +1,4 @@
-package dev.keego.volume.booster.repositories
+package dev.keego.volume.booster.section.repositories
 
 import android.content.Context
 import android.media.AudioManager

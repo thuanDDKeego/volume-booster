@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.keego.volume.booster.repositories.NotificationPlaybackRepository
+import dev.keego.volume.booster.section.repositories.NotificationPlaybackRepository
 import javax.inject.Singleton
 
 @Module

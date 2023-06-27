@@ -1,11 +1,11 @@
-package dev.keego.volume.booster.repositories
+package dev.keego.volume.booster.section.repositories
 
 import android.app.Notification
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
-import dev.keego.volume.booster.model.PlaybackCommand
+import dev.keego.volume.booster.section.model.PlaybackCommand
 import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

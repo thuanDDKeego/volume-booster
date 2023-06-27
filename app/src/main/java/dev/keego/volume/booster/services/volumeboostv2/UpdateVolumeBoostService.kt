@@ -3,6 +3,7 @@ package dev.keego.volume.booster.services.volumeboostv2
 import android.app.*
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import android.media.audiofx.BassBoost
 import android.media.audiofx.Equalizer
 import android.media.audiofx.LoudnessEnhancer
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.BuildConfig
 import dev.keego.volume.booster.MainActivity
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.repositories.BoostServiceRepository
+import dev.keego.volume.booster.section.repositories.BoostServiceRepository
 import dev.keego.volume.booster.services.messages.*
 import dev.keego.volume.booster.services.volumeboost.GlobalVars
 import dev.keego.volume.booster.services.volumeboost.NotificationChannelHelper
@@ -113,13 +114,17 @@ class UpdateVolumeBoostService : Service() {
             )
             enabled = true // Configuration is done, can enable now...
         }
+        val mediaPlayer = MediaPlayer()
+        val audioSessionId = mediaPlayer.audioSessionId
+        Timber.d("audioSessionId $audioSessionId")
         bassBoost = BassBoost(0, 0).apply {
-            setStrength(1000) // max strength
+
+//            setStrength(1000) // max strength
             enabled = true
         }
 
         virtualizer = Virtualizer(0, 0).apply {
-            setStrength(1000) // max strength
+//            setStrength(1000) // max strength
             enabled = true
         }
     }

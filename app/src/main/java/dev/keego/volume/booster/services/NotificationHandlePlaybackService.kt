@@ -12,9 +12,9 @@ import android.media.session.PlaybackState
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import dagger.hilt.android.AndroidEntryPoint
-import dev.keego.volume.booster.model.PlaybackCommand
-import dev.keego.volume.booster.repositories.NotificationPlaybackRepository
-import dev.keego.volume.booster.repositories.PlayBackState
+import dev.keego.volume.booster.section.model.PlaybackCommand
+import dev.keego.volume.booster.section.repositories.NotificationPlaybackRepository
+import dev.keego.volume.booster.section.repositories.PlayBackState
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs

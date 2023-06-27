@@ -7,7 +7,7 @@ buildscript {
     lottie_version = '5.2.0'
 
     // kotlin version
-    kotlin_version = '1.7.20'
+    kotlin_version = '1.8.0'
     kotlin_compose_compiler_version = "1.3.2"
     // come along with kotlin_version https://developer.android.com/jetpack/androidx/releases/compose-kotlin#declaring_dependencies
 

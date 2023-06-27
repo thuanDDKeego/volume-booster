@@ -29,7 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.repositories.PlayBackState
+import dev.keego.volume.booster.section.repositories.PlayBackState
 import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 import dev.keego.volume.booster.screens.home.volume.VolumeViewModel
 

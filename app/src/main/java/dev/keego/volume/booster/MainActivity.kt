@@ -2,14 +2,12 @@ package dev.keego.volume.booster
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
-import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,7 +23,7 @@ import androidx.core.content.ContextCompat
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
-import dev.keego.volume.booster.screens.home.NavGraphs
+import dev.keego.volume.booster.screens.NavGraphs
 import dev.keego.volume.booster.screens.home.home_
 import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceQueryPing
@@ -50,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     home_()
                 }
@@ -66,7 +64,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier,
                         navGraph = NavGraphs.root,
                         engine = engine,
-                        navController = navController,
+                        navController = navController
                     )
                 }
             }
@@ -76,13 +74,13 @@ class MainActivity : ComponentActivity() {
     private fun requireRecordAudio(activity: Activity) {
         if (ContextCompat.checkSelfPermission(
                 activity,
-                android.Manifest.permission.RECORD_AUDIO,
+                android.Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 activity,
                 arrayOf(android.Manifest.permission.RECORD_AUDIO),
-                42,
+                42
             )
         }
     }

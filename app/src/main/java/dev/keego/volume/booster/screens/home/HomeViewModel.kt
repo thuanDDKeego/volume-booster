@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.keego.volume.booster.model.PlaybackCommand
-import dev.keego.volume.booster.repositories.BoostServiceRepository
-import dev.keego.volume.booster.repositories.NotificationPlaybackRepository
+import dev.keego.volume.booster.section.model.PlaybackCommand
+import dev.keego.volume.booster.section.repositories.BoostServiceRepository
+import dev.keego.volume.booster.section.repositories.NotificationPlaybackRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
