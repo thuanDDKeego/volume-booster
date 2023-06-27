@@ -25,7 +25,7 @@ object Vibration {
                     // The amplitude is not controllable on API levels below 26
                     // The device will vibrate for 200 milliseconds with the default amplitude
                     @Suppress("DEPRECATION")
-                    it.vibrate(100)
+                    it.vibrate(200)
                 }
             }
         }
