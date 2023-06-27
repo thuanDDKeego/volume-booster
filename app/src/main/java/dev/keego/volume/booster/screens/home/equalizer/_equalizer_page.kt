@@ -1,5 +1,6 @@
 package dev.keego.volume.booster.screens.home.equalizer
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.common.collect.ImmutableList
@@ -23,6 +27,7 @@ import dev.keego.volume.booster.screens.home.component._equalizer_playback
 import dev.keego.volume.booster.screens.home.component._equalizer_preset
 import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.shared.tag.TagTheme
+import dev.keego.volume.booster.ui.dialog._dialog_save_preset
 
 @Composable
 fun _equalizer_page(
@@ -31,6 +36,8 @@ fun _equalizer_page(
     viewModel: EqualizerViewModel,
     tag: TagTheme = TagTheme.DEFAULT
 ) {
+    val context = LocalContext.current
+
     val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
     val bassStrength by viewModel.bassStrength.collectAsStateWithLifecycle()
     val virtualizerStrength by viewModel.virtualizerStrenth.collectAsStateWithLifecycle()
@@ -38,14 +45,29 @@ fun _equalizer_page(
     val preset by viewModel.currentPreset.collectAsStateWithLifecycle()
     val enable by viewModel.enable.collectAsStateWithLifecycle()
 
+    var showingSavePresetDialog by remember { mutableStateOf(false) }
+
     val lambdaEnableEqualizer = remember<(Boolean) -> Unit> {
         {
             viewModel.toggleEnableEqualizer(it)
         }
     }
-    val lambdaSavePreset = remember<() -> Unit> {
+    val lambdaSavePreset = remember<(String) -> Unit> {
         {
-            viewModel.savePreset()
+            if (it.isBlank()) {
+                Toast.makeText(context, "name cannot be empty", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.savePreset(
+                    it,
+                    onError = { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    },
+                    onSuccess = {
+                        showingSavePresetDialog = false
+                        Toast.makeText(context, "saved successfully", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
         }
     }
     val lambdaRevertPreset = remember<() -> Unit> {
@@ -90,7 +112,7 @@ fun _equalizer_page(
             onPresetClick = {
                 navigator.navigate(presets_Destination)
             },
-            onSaveClick = lambdaSavePreset,
+            onSaveClick = { showingSavePresetDialog = true },
             onRevertClick = lambdaRevertPreset,
             onToggleEnable = lambdaEnableEqualizer
         )
@@ -119,6 +141,13 @@ fun _equalizer_page(
             onPause = { lambdaPlaybackCommand.invoke(PlaybackCommand.Pause) },
             onPrevious = { lambdaPlaybackCommand.invoke(PlaybackCommand.Previous) },
             onNext = { lambdaPlaybackCommand.invoke(PlaybackCommand.Next) }
+        )
+    }
+    if (showingSavePresetDialog) {
+        _dialog_save_preset(
+            onDismiss = { showingSavePresetDialog = false },
+            suggestName = viewModel.getSuggestNameNewPreset(),
+            onSave = lambdaSavePreset
         )
     }
 }

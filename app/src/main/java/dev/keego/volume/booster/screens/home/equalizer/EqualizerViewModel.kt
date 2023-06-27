@@ -94,21 +94,36 @@ class EqualizerViewModel @Inject constructor(
         }
     }
 
-    fun savePreset() {
-        viewModelScope.launch {
-            var counter = 1
-            var newCustomPresetName = "Custom $counter"
-            while (_presets.value.any { it.name == newCustomPresetName }) {
-                newCustomPresetName = "Custom ${++counter}"
+    fun savePreset(name: String, onError: (message: String) -> Unit, onSuccess: () -> Unit) {
+        if (_presets.value.any {
+                it.name.trim().lowercase() == name.trim().lowercase()
             }
+        ) {
+            onError("Name already exists, try another")
+            return
+        }
+        viewModelScope.launch {
             presetRepository.insert(
                 _currentPreset.value.copy(
                     id = 0,
-                    name = newCustomPresetName,
+                    name = name,
                     timeCreated = System.currentTimeMillis()
                 )
             )
+            onSuccess()
         }
+    }
+
+    fun getSuggestNameNewPreset(): String {
+        var counter = 1
+        var newCustomPresetName = "Custom $counter"
+        while (_presets.value.any {
+                it.name.trim().lowercase() == newCustomPresetName.trim().lowercase()
+            }
+        ) {
+            newCustomPresetName = "Custom ${++counter}"
+        }
+        return newCustomPresetName
     }
 
     fun revertPreset() {

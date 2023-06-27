@@ -5,4 +5,8 @@
     <string name="bass_boost">Bass Boost</string>
     <string name="virtualize">Virtualize</string>
     <string name="presets">Presets</string>
+    <string name="save_preset">Save Preset</string>
+    <string name="enter_preset_name">Enter preset name</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>
