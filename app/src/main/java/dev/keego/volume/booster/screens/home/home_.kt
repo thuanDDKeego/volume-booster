@@ -2,10 +2,11 @@ package dev.keego.volume.booster.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -25,18 +26,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.keego.volume.booster.R
+import dev.keego.volume.booster.screens.home.component._home_playback
 import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 import dev.keego.volume.booster.screens.home.equalizer._equalizer_page
 import dev.keego.volume.booster.screens.home.volume._volume_page
+import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.shared.ui._general_top_bar
 import kotlinx.coroutines.launch
 
@@ -51,11 +57,20 @@ private const val PAGE_NUMBER = 2
 @Composable
 fun home_(
     navigator: DestinationsNavigator,
-    viewModel: EqualizerViewModel
+    equalizerViewModel: EqualizerViewModel,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val playback by homeViewModel.playback.collectAsStateWithLifecycle()
+    val playbackColor by homeViewModel.playbackColor.collectAsStateWithLifecycle()
+
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    val putPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
+        { homeViewModel.putPlaybackCommand(it) }
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -100,34 +115,10 @@ fun home_(
                 )
             }
         ) {
-            Box(modifier = Modifier.fillMaxSize().padding(it)) {
+            Column(modifier = Modifier.fillMaxSize().padding(it)) {
                 /*TODO update here*/
-                HorizontalPager(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 60.dp),
-                    pageCount = PAGE_NUMBER,
-                    userScrollEnabled = true,
-                    state = pagerState
-                ) { page ->
-                    when (page) {
-                        0 -> {
-                            _volume_page(
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-
-                        else -> {
-                            _equalizer_page(
-                                modifier = Modifier.fillMaxSize(),
-                                navigator = navigator,
-                                viewModel = viewModel
-                            )
-                        }
-                    }
-                }
                 // page items
-                Row(modifier = Modifier.align(Alignment.TopCenter).padding(top = 12.dp)) {
+                Row(modifier = Modifier) {
                     Text(
                         text = "Volume",
                         modifier = Modifier.clickable {
@@ -146,6 +137,38 @@ fun home_(
                         }
                     )
                 }
+                HorizontalPager(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(top = 12.dp),
+                    pageCount = PAGE_NUMBER,
+                    userScrollEnabled = true,
+                    state = pagerState
+                ) { page ->
+                    when (page) {
+                        0 -> {
+                            _volume_page(
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+
+                        else -> {
+                            _equalizer_page(
+                                modifier = Modifier.fillMaxSize(),
+                                navigator = navigator,
+                                viewModel = equalizerViewModel
+                            )
+                        }
+                    }
+                }
+                _home_playback(
+                    onContentClick = { putPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
+                    onPlay = { putPlaybackCommand.invoke(PlaybackCommand.Play) },
+                    onPause = { putPlaybackCommand.invoke(PlaybackCommand.Pause) },
+                    onPrevious = { putPlaybackCommand.invoke(PlaybackCommand.Previous) },
+                    onNext = { putPlaybackCommand.invoke(PlaybackCommand.Next) }
+                )
             }
         }
     }

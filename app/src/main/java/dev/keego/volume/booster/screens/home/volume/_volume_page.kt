@@ -18,9 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.keego.volume.booster.screens.home.component._volume_button
 import dev.keego.volume.booster.screens.home.component._volume_control
-import dev.keego.volume.booster.screens.home.component._volume_playback
 import dev.keego.volume.booster.screens.home.component._volume_slider
-import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.shared.tag.TagTheme
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -34,14 +32,13 @@ fun _volume_page(
     val viewModel = hiltViewModel<VolumeViewModel>()
     val visualizerData by viewModel.visualizerData.collectAsStateWithLifecycle()
     val boostValue by viewModel.boostValue.collectAsStateWithLifecycle()
-    val colorPlayback by viewModel.color.collectAsStateWithLifecycle()
 
     val lambdaUpdateBoostValue = remember<(Int) -> Unit> {
         { viewModel.updateBoostValue(context, it) }
     }
-    val putPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
-        { viewModel.putPlaybackCommand(it) }
-    }
+//    val putPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
+//        { viewModel.putPlaybackCommand(it) }
+//    }
     val buttons = listOf(
         VolumeButton(label = "Mute") { lambdaUpdateBoostValue.invoke(0) },
         VolumeButton(label = "30%") { lambdaUpdateBoostValue.invoke(30) },
@@ -102,14 +99,14 @@ fun _volume_page(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        _volume_playback(
-            color = colorPlayback,
-            onContentClick = { putPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
-            onPlay = { putPlaybackCommand.invoke(PlaybackCommand.Play) },
-            onPause = { putPlaybackCommand.invoke(PlaybackCommand.Pause) },
-            onPrevious = { putPlaybackCommand.invoke(PlaybackCommand.Previous) },
-            onNext = { putPlaybackCommand.invoke(PlaybackCommand.Next) }
-        )
+//        _volume_playback(
+//            color = colorPlayback,
+//            onContentClick = { putPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
+//            onPlay = { putPlaybackCommand.invoke(PlaybackCommand.Play) },
+//            onPause = { putPlaybackCommand.invoke(PlaybackCommand.Pause) },
+//            onPrevious = { putPlaybackCommand.invoke(PlaybackCommand.Previous) },
+//            onNext = { putPlaybackCommand.invoke(PlaybackCommand.Next) }
+//        )
     }
 }
 

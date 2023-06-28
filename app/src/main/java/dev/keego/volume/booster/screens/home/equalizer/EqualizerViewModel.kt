@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.keego.volume.booster.R
 import dev.keego.volume.booster.section.local.preset.Preset
-import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.section.repositories.BoostServiceRepository
-import dev.keego.volume.booster.section.repositories.NotificationPlaybackRepository
 import dev.keego.volume.booster.section.repositories.PresetRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,12 +17,10 @@ import timber.log.Timber
 @HiltViewModel
 class EqualizerViewModel @Inject constructor(
     private val volumeBoostRepository: BoostServiceRepository,
-    private val notificationblayBackRepository: NotificationPlaybackRepository,
     private val presetRepository: PresetRepository
 ) :
     ViewModel() {
 
-    val playbackState = notificationblayBackRepository.playback
     val enable = volumeBoostRepository.enableEqualizer
     val visualizerData = volumeBoostRepository.visualizerArray
     val bandLevel = volumeBoostRepository.bandValue
@@ -47,10 +43,6 @@ class EqualizerViewModel @Inject constructor(
 
     fun toggleEnableEqualizer(value: Boolean) {
         volumeBoostRepository.toggleEnableEqualizer(value)
-    }
-
-    fun putPlaybackCommand(command: PlaybackCommand) {
-        notificationblayBackRepository.putCommand(command)
     }
 
     fun updateBandValue(frequency: Int, value: Int) {

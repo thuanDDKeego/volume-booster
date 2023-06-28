@@ -23,9 +23,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.keego.volume.booster.screens.destinations.presets_Destination
 import dev.keego.volume.booster.screens.home.component._equalizer_bass_virtual
 import dev.keego.volume.booster.screens.home.component._equalizer_frequencies
-import dev.keego.volume.booster.screens.home.component._equalizer_playback
 import dev.keego.volume.booster.screens.home.component._equalizer_preset
-import dev.keego.volume.booster.section.model.PlaybackCommand
 import dev.keego.volume.booster.shared.tag.TagTheme
 import dev.keego.volume.booster.ui.dialog._dialog_save_preset
 
@@ -73,11 +71,6 @@ fun _equalizer_page(
     val lambdaRevertPreset = remember<() -> Unit> {
         {
             viewModel.revertPreset()
-        }
-    }
-    val lambdaPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
-        {
-            viewModel.putPlaybackCommand(it)
         }
     }
     val lambdaUpdateBoostStrength = remember<(Int) -> Unit> {
@@ -135,13 +128,13 @@ fun _equalizer_page(
             onFrequencyChange = lambdaUpdateBandValue
         )
         Spacer(modifier = Modifier.weight(1f))
-        _equalizer_playback(
-            onContentClick = { lambdaPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
-            onPlay = { lambdaPlaybackCommand.invoke(PlaybackCommand.Play) },
-            onPause = { lambdaPlaybackCommand.invoke(PlaybackCommand.Pause) },
-            onPrevious = { lambdaPlaybackCommand.invoke(PlaybackCommand.Previous) },
-            onNext = { lambdaPlaybackCommand.invoke(PlaybackCommand.Next) }
-        )
+//        _equalizer_playback(
+//            onContentClick = { lambdaPlaybackCommand.invoke(PlaybackCommand.ContentClick) },
+//            onPlay = { lambdaPlaybackCommand.invoke(PlaybackCommand.Play) },
+//            onPause = { lambdaPlaybackCommand.invoke(PlaybackCommand.Pause) },
+//            onPrevious = { lambdaPlaybackCommand.invoke(PlaybackCommand.Previous) },
+//            onNext = { lambdaPlaybackCommand.invoke(PlaybackCommand.Next) }
+//        )
     }
     if (showingSavePresetDialog) {
         _dialog_save_preset(

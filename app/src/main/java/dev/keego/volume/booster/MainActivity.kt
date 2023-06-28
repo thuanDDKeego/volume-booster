@@ -1,6 +1,5 @@
 package dev.keego.volume.booster
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -11,11 +10,9 @@ import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
@@ -27,7 +24,6 @@ import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.screens.NavGraphs
 import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
-import dev.keego.volume.booster.screens.home.home_
 import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceQueryPing
 import dev.keego.volume.booster.services.volumeboost.GlobalVars
@@ -38,7 +34,6 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,13 +43,6 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            val requestLauncher = registerForActivityResult()
             VolumeBoosterTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    home_()
-                }
                 val engine = rememberNavHostEngine()
                 val navController = engine.rememberNavController().apply {
                     addOnDestinationChangedListener { _, destination, _ ->
@@ -64,7 +52,7 @@ class MainActivity : ComponentActivity() {
                 }
                 Scaffold {
                     DestinationsNavHost(
-                        modifier = Modifier,
+                        modifier = Modifier.padding(it),
                         navGraph = NavGraphs.root,
                         engine = engine,
                         navController = navController,

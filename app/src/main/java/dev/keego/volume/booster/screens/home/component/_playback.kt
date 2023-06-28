@@ -31,22 +31,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
-import dev.keego.volume.booster.screens.home.volume.VolumeViewModel
+import dev.keego.volume.booster.screens.home.HomeViewModel
 import dev.keego.volume.booster.section.repositories.PlayBackState
 
 @Composable
-fun _volume_playback(
+fun _home_playback(
     modifier: Modifier = Modifier,
-    color: Int,
     onContentClick: () -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
-    val viewModel = hiltViewModel<VolumeViewModel>()
-    val playback by viewModel.playbackState.collectAsStateWithLifecycle()
+    val viewModel = hiltViewModel<HomeViewModel>()
+    val playback by viewModel.playback.collectAsStateWithLifecycle()
+    val color by viewModel.playbackColor.collectAsStateWithLifecycle()
     _playback(
         modifier = modifier,
         color = color,
@@ -58,28 +57,50 @@ fun _volume_playback(
         onNext = onNext
     )
 }
-
-@Composable
-fun _equalizer_playback(
-    modifier: Modifier = Modifier,
-    onContentClick: () -> Unit,
-    onPlay: () -> Unit,
-    onPause: () -> Unit,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit
-) {
-    val viewModel = hiltViewModel<EqualizerViewModel>()
-    val playback by viewModel.playbackState.collectAsStateWithLifecycle()
-    _playback(
-        modifier = modifier,
-        playback = playback,
-        onContentClick = onContentClick,
-        onPlay = onPlay,
-        onPause = onPause,
-        onPrevious = onPrevious,
-        onNext = onNext
-    )
-}
+//
+// @Composable
+// fun _volume_playback(
+//    modifier: Modifier = Modifier,
+//    color: Int,
+//    onContentClick: () -> Unit,
+//    onPlay: () -> Unit,
+//    onPause: () -> Unit,
+//    onPrevious: () -> Unit,
+//    onNext: () -> Unit
+// ) {
+//    val viewModel = hiltViewModel<VolumeViewModel>()
+//    _playback(
+//        modifier = modifier,
+//        color = color,
+//        playback = playback,
+//        onContentClick = onContentClick,
+//        onPlay = onPlay,
+//        onPause = onPause,
+//        onPrevious = onPrevious,
+//        onNext = onNext
+//    )
+// }
+//
+// @Composable
+// fun _equalizer_playback(
+//    modifier: Modifier = Modifier,
+//    onContentClick: () -> Unit,
+//    onPlay: () -> Unit,
+//    onPause: () -> Unit,
+//    onPrevious: () -> Unit,
+//    onNext: () -> Unit
+// ) {
+//    val viewModel = hiltViewModel<EqualizerViewModel>()
+//    _playback(
+//        modifier = modifier,
+//        playback = playback,
+//        onContentClick = onContentClick,
+//        onPlay = onPlay,
+//        onPause = onPause,
+//        onPrevious = onPrevious,
+//        onNext = onNext
+//    )
+// }
 
 @Composable
 private fun _playback(

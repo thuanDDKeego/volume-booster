@@ -1,4 +1,4 @@
-package dev.keego.volume.booster.modules
+package dev.keego.volume.booster.setup.di
 
 import dagger.Module
 import dagger.Provides

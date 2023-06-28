@@ -1,4 +1,4 @@
-package dev.keego.volume.booster.modules
+package dev.keego.volume.booster.setup.di
 
 import android.content.Context
 import dagger.Module
@@ -14,5 +14,6 @@ import javax.inject.Singleton
 object BoostServiceModule {
     @Singleton
     @Provides
-    fun providesBoostServiceRepository(@ApplicationContext context: Context) = BoostServiceRepository(context)
+    fun providesBoostServiceRepository(@ApplicationContext context: Context) =
+        BoostServiceRepository(context)
 }
