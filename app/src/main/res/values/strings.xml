@@ -9,4 +9,7 @@
     <string name="enter_preset_name">Enter preset name</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="vibration_setting">Vibration Setting</string>
+    <string name="equalizer_setting">Equalizer Setting</string>
+    <string name="languages">Languages</string>
 </resources>

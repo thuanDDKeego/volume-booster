@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,6 +39,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.keego.volume.booster.R
+import dev.keego.volume.booster.screens.home.component._drawer_content
 import dev.keego.volume.booster.screens.home.component._home_playback
 import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
 import dev.keego.volume.booster.screens.home.equalizer._equalizer_page
@@ -60,8 +62,8 @@ fun home_(
     equalizerViewModel: EqualizerViewModel,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val playback by homeViewModel.playback.collectAsStateWithLifecycle()
-    val playbackColor by homeViewModel.playbackColor.collectAsStateWithLifecycle()
+    val enabledEqualizer by homeViewModel.enabledEqualizer.collectAsStateWithLifecycle()
+    val enabledVibration by homeViewModel.enabledVibration.collectAsStateWithLifecycle()
 
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
@@ -71,10 +73,25 @@ fun home_(
         { homeViewModel.putPlaybackCommand(it) }
     }
 
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val drawerWidth = screenWidth * 4f / 5f
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet { /* Drawer content */ }
+            ModalDrawerSheet(
+                modifier = Modifier.width(drawerWidth.dp)
+            ) {
+                /* Drawer content */
+                _drawer_content(
+                    vibrationValue = enabledVibration,
+                    equalizerValue = enabledEqualizer,
+                    onVibrationValueChange = homeViewModel::toggleEnabledVibration,
+                    onEqualizerValueChange = homeViewModel::toggleEnabledEqualizer,
+                    onLanguageClick = {
+                        /*TODO update here*/
+                    }
+                )
+            }
         }
     ) {
         Scaffold(

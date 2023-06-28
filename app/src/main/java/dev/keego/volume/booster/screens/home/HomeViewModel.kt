@@ -23,4 +23,12 @@ class HomeViewModel @Inject constructor(
     fun putPlaybackCommand(command: PlaybackCommand) {
         notificationPlaybackRepository.putCommand(command)
     }
+
+    fun toggleEnabledVibration(value: Boolean) {
+        addOnFeaturesRepository.toggleVibration(value)
+    }
+
+    fun toggleEnabledEqualizer(value: Boolean) {
+        boostServiceRepository.toggleEnableEqualizer(value)
+    }
 }
