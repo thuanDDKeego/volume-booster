@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class AddOnFeaturesRepository(private val context: Context) {
-    private val _enabledVibrate = MutableStateFlow(false)
+    private val _enabledVibrate = MutableStateFlow(true)
     val enabledVibrate = _enabledVibrate.asStateFlow()
 
     fun toggleVibration(enabled: Boolean) {

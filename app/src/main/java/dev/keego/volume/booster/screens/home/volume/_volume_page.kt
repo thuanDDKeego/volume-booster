@@ -34,7 +34,7 @@ fun _volume_page(
     val boostValue by viewModel.boostValue.collectAsStateWithLifecycle()
 
     val lambdaUpdateBoostValue = remember<(Int) -> Unit> {
-        { viewModel.updateBoostValue(context, it) }
+        { viewModel.updateBoostValue(it) }
     }
 //    val putPlaybackCommand = remember<(PlaybackCommand) -> Unit> {
 //        { viewModel.putPlaybackCommand(it) }
