@@ -24,12 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.canopas.lib.showcase.ShowcaseStyle
+import com.canopas.lib.showcase.introShowCaseTarget
+import dev.keego.volume.booster.LocalIntroShowCase
 import dev.keego.volume.booster.R
 import dev.keego.volume.booster.screens.home.HomeViewModel
 import dev.keego.volume.booster.section.repositories.PlayBackState
@@ -113,6 +117,7 @@ private fun _playback(
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
+    val introShowCaseState = LocalIntroShowCase.current
     val color by animateColorAsState(targetValue = Color(color), tween(durationMillis = 300))
     Row(
         modifier = modifier
@@ -156,35 +161,69 @@ private fun _playback(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        IconButton(onClick = { onPrevious() }) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_previous),
-                contentDescription = "",
-                modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        IconButton(
-            onClick = if (playback.isPlaying) onPause else onPlay
+        Row(
+            modifier = Modifier
+                .introShowCaseTarget(
+                    state = introShowCaseState,
+                    index = 1,
+                    style = ShowcaseStyle.Default.copy(
+                        // specify color of background
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        // specify transparency of background
+                        backgroundAlpha = 0.98f,
+                        // specify color of target circle
+                        targetCircleColor = Color.White
+                    ),
+                    content = {
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.control_the_music),
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            )
+                            Text(
+                                text = stringResource(
+                                    id = R.string.you_can_play_and_control_music_as_you_like
+                                ),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            )
+                        }
+                    }
+                )
         ) {
-            Icon(
-                painter = painterResource(
-                    id = if (playback.isPlaying) R.drawable.ic_pause else R.drawable.ic_play
-                ),
-                contentDescription = "",
-                modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        IconButton(onClick = onNext) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_next_song),
-                contentDescription = "",
-                modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.onSurface
-            )
+            IconButton(onClick = { onPrevious() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_previous),
+                    contentDescription = "",
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(
+                onClick = if (playback.isPlaying) onPause else onPlay
+            ) {
+                Icon(
+                    painter = painterResource(
+                        id = if (playback.isPlaying) R.drawable.ic_pause else R.drawable.ic_play
+                    ),
+                    contentDescription = "",
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(onClick = onNext) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_next_song),
+                    contentDescription = "",
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 }

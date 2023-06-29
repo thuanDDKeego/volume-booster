@@ -13,11 +13,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.canopas.lib.showcase.IntroShowCaseState
+import com.canopas.lib.showcase.rememberIntroShowCaseState
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.rememberNavHostEngine
@@ -32,8 +36,12 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import timber.log.Timber
 
+val LocalIntroShowCase =
+    staticCompositionLocalOf<IntroShowCaseState> { error("No IntroShowCaseState provided") }
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +51,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            val requestLauncher = registerForActivityResult()
             VolumeBoosterTheme {
+                val introState = rememberIntroShowCaseState()
                 val engine = rememberNavHostEngine()
                 val navController = engine.rememberNavController().apply {
                     addOnDestinationChangedListener { _, destination, _ ->
@@ -50,17 +59,19 @@ class MainActivity : ComponentActivity() {
 //                        InternetRequiredHelper.required(this@MainActivity)
                     }
                 }
-                Scaffold {
-                    DestinationsNavHost(
-                        modifier = Modifier.padding(it),
-                        navGraph = NavGraphs.root,
-                        engine = engine,
-                        navController = navController,
-                        dependenciesContainerBuilder = { // this: DependenciesContainerBuilder<*>
-                            // 👇 To tie ActivityViewModel to the activity, making it available to all destinations
-                            dependency(hiltViewModel<EqualizerViewModel>(this@MainActivity))
-                        }
-                    )
+                CompositionLocalProvider(LocalIntroShowCase provides introState) {
+                    Scaffold {
+                        DestinationsNavHost(
+                            modifier = Modifier.padding(it),
+                            navGraph = NavGraphs.root,
+                            engine = engine,
+                            navController = navController,
+                            dependenciesContainerBuilder = { // this: DependenciesContainerBuilder<*>
+                                // 👇 To tie ActivityViewModel to the activity, making it available to all destinations
+                                dependency(hiltViewModel<EqualizerViewModel>(this@MainActivity))
+                            }
+                        )
+                    }
                 }
             }
         }

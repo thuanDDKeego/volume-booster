@@ -358,21 +358,41 @@ fun _circular_progress_indicator(
                 brush = Brush.radialGradient(
                     listOf(primaryColor.copy(alpha = 0.45f), primaryColor.copy(alpha = 0.15f))
                 ),
+                radius = circleRadius * 0.65f,
+                center = circleCenter
+            )
+//             this is background of progress bar
+            drawCircle(
+                style = Stroke(
+                    width = circleThickness
+                ),
+                color = primaryColor.copy(alpha = 0.3f),
                 radius = circleRadius,
                 center = circleCenter
             )
-            // this is background of progress bar
-//            drawCircle(
-//                style = Stroke(
-//                    width = circleThickness
-//                ),
-//                color = secondaryColor,
-//                radius = circleRadius,
-//                center = circleCenter
-//            )
+
+            // this Arc is progress value ( rounded arc)
+            drawArc(
+                color = primaryColor,
+                startAngle = 150f,
+                sweepAngle = (totalAngle / range.last) * value.toFloat(),
+                style = Stroke(
+                    width = circleThickness,
+                    cap = StrokeCap.Round
+                ),
+                useCenter = false,
+                size = Size(
+                    width = circleRadius * 2f,
+                    height = circleRadius * 2f
+                ),
+                topLeft = Offset(
+                    x = (width - circleRadius * 2f) / 2f,
+                    y = (height - circleRadius * 2f) / 2f
+                )
+            )
 
             // this is the dot representing the current value
-            val dotRadiusFraction = 0.8f
+            val dotRadiusFraction = 0.5f
             val dotPosition = Offset(
                 x = circleCenter.x + dotRadiusFraction * circleRadius * cos(
                     Math.toRadians(150.0 + totalAngle * value / range.last).toFloat()
@@ -383,7 +403,7 @@ fun _circular_progress_indicator(
             )
             drawCircle(
                 color = secondaryColor,
-                radius = circleThickness, // adjust the size of the dot as needed
+                radius = circleThickness * 0.7f, // adjust the size of the dot as needed
                 center = dotPosition
             )
 
@@ -428,7 +448,7 @@ fun _circular_progress_indicator(
                     drawCircle(
                         color = color,
                         center = start,
-                        radius = 3.dp.toPx()
+                        radius = (2.5).dp.toPx()
                     )
                 }
             }

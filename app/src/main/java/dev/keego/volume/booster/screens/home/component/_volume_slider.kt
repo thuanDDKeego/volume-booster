@@ -22,6 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.canopas.lib.showcase.ShowcaseStyle
+import com.canopas.lib.showcase.introShowCaseTarget
+import dev.keego.volume.booster.LocalIntroShowCase
 import dev.keego.volume.booster.R
 import dev.keego.volume.booster.shared.tag.TagTheme
 
@@ -36,6 +39,7 @@ fun _volume_slider(
     onSpeakerClick: (Boolean) -> Unit,
     onValueChange: (Float) -> Unit
 ) {
+    val introShowCaseState = LocalIntroShowCase.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth()
@@ -81,7 +85,37 @@ fun _volume_slider(
                 contentDescription = "Heart Shape",
                 modifier = Modifier
                     .offset(y = (2).dp)
-                    .size(18.dp),
+                    .size(22.dp)
+                    .introShowCaseTarget(
+                        state = introShowCaseState,
+                        index = 3,
+                        style = ShowcaseStyle.Default.copy(
+                            // specify color of background
+                            backgroundColor = MaterialTheme.colorScheme.primary,
+                            // specify transparency of background
+                            backgroundAlpha = 0.98f,
+                            // specify color of target circle
+                            targetCircleColor = Color.White
+                        ),
+                        content = {
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.adjust),
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                )
+                                Text(
+                                    text = stringResource(
+                                        id = R.string.adjust_system_volume
+                                    ),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                )
+                            }
+                        }
+                    ),
                 tint = Color(0xFF3F51B5)
             )
         }

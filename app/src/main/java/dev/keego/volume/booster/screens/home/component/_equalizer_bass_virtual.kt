@@ -73,8 +73,7 @@ fun _equalizer_bass_virtual(
             modifier = Modifier.width(circularProgressSize.toDp(context).dp)
         ) {
             _circular_progress_indicator(
-                modifier = modifier.wrapContentSize()
-                    .background(Color.Gray),
+                modifier = modifier.wrapContentSize(),
                 enable = enable,
                 value = bassBoostValue.toInt(),
                 maxValue = maxBassValue.toInt(),
@@ -101,8 +100,7 @@ fun _equalizer_bass_virtual(
             modifier = Modifier.width(circularProgressSize.toDp(context).dp)
         ) {
             _circular_progress_indicator(
-                modifier = modifier.wrapContentSize()
-                    .background(Color.Gray),
+                modifier = modifier.wrapContentSize(),
                 enable = enable,
                 value = virtualizerValue.toInt(),
                 maxValue = maxVirtualizerValue.toInt(),

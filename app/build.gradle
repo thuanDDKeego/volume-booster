@@ -148,4 +148,7 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
 
+    //for on-boarding (target guide)
+    implementation 'com.canopas.intro-showcase-view:introshowcaseview:1.0.7'
+
 }
