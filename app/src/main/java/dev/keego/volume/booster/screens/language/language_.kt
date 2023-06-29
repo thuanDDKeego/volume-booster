@@ -82,7 +82,7 @@ fun language_(
                         // Update the app locale immediately
                         AppCompatDelegate.setApplicationLocales(
                             LocaleListCompat.forLanguageTags(
-                                languageSelected?.locale
+                                languageSelected.locale
                             )
                         )
                         navigator.navigateUp()

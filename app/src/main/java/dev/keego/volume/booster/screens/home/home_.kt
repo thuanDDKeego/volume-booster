@@ -96,7 +96,7 @@ fun home_(
         showIntroShowCase = isShowIntroShowCase,
         onShowCaseCompleted = {
             isShowIntroShowCase = false
-//            AppPreferences.isShowedTargetGuide = true
+            AppPreferences.isShowedTargetGuide = true
             scope.launch {
                 drawerState.apply {
                     open()

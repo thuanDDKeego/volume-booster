@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -351,7 +352,7 @@ fun _circular_progress_indicator(
         ) {
             val width = size.width
             val height = size.height
-            val circleThickness = width / 25f
+            val circleThickness = width / 20f
             circleCenter = Offset(x = width / 2f, y = height / 2f)
 
             drawCircle(
@@ -372,24 +373,54 @@ fun _circular_progress_indicator(
             )
 
             // this Arc is progress value ( rounded arc)
-            drawArc(
-                color = primaryColor,
-                startAngle = 150f,
-                sweepAngle = (totalAngle / range.last) * value.toFloat(),
-                style = Stroke(
-                    width = circleThickness,
-                    cap = StrokeCap.Round
-                ),
-                useCenter = false,
-                size = Size(
-                    width = circleRadius * 2f,
-                    height = circleRadius * 2f
-                ),
-                topLeft = Offset(
-                    x = (width - circleRadius * 2f) / 2f,
-                    y = (height - circleRadius * 2f) / 2f
-                )
-            )
+            val steps = 100
+            val gradientColors = List(steps) { fraction ->
+                lerp(secondaryColor, Color.Red, fraction.toFloat() / steps)
+            }
+
+            val sweepStep = (totalAngle / steps)
+            val sweepValue = ((totalAngle / range.last) * value.toFloat())
+            val innerRadius = circleRadius
+
+            gradientColors.forEachIndexed { index, color ->
+                if ((index + 1) * sweepStep <= sweepValue) {
+                    drawArc(
+                        color = color,
+                        startAngle = 150f + index * sweepStep,
+                        sweepAngle = sweepStep,
+                        useCenter = false,
+                        topLeft = Offset(
+                            x = (width - circleRadius * 2) / 2,
+                            y = (height - circleRadius * 2) / 2
+                        ),
+                        size = Size(
+                            width = innerRadius * 2,
+                            height = innerRadius * 2
+                        ),
+                        style = Stroke(width = circleThickness, cap = StrokeCap.Round)
+                    )
+                }
+            }
+            // drawArc(
+            //                brush = Brush.linearGradient(
+            //                    listOf(secondaryColor, primaryColor)
+            //                ),
+            //                startAngle = 150f,
+            //                sweepAngle = (totalAngle / range.last) * value.toFloat(),
+            //                style = Stroke(
+            //                    width = circleThickness,
+            //                    cap = StrokeCap.Round
+            //                ),
+            //                useCenter = false,
+            //                size = Size(
+            //                    width = circleRadius * 2f,
+            //                    height = circleRadius * 2f
+            //                ),
+            //                topLeft = Offset(
+            //                    x = (width - circleRadius * 2f) / 2f,
+            //                    y = (height - circleRadius * 2f) / 2f
+            //                )
+            //            )
 
             // this is the dot representing the current value
             val dotRadiusFraction = 0.5f
