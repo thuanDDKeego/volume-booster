@@ -24,4 +24,5 @@
     <string name="adjust_system_volume">Adjust system volume</string>
     <string name="quick_select">Quick select</string>
     <string name="quick_adjust_volume">Quick adjust volume</string>
+    <string name="language">Language</string>
 </resources>

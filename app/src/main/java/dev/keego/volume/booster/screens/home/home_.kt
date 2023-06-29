@@ -47,6 +47,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.keego.volume.booster.LocalIntroShowCase
 import dev.keego.volume.booster.R
+import dev.keego.volume.booster.screens.destinations.language_Destination
 import dev.keego.volume.booster.screens.home.component._drawer_content
 import dev.keego.volume.booster.screens.home.component._home_playback
 import dev.keego.volume.booster.screens.home.equalizer.EqualizerViewModel
@@ -119,7 +120,7 @@ fun home_(
                         onVibrationValueChange = homeViewModel::toggleEnabledVibration,
                         onEqualizerValueChange = homeViewModel::toggleEnabledEqualizer,
                         onLanguageClick = {
-                            /*TODO update here*/
+                            navigator.navigate(language_Destination)
                         }
                     )
                 }
