@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">VolumeBooster</string>
+    <string name="volume_booster">Volume Booster</string>
+    <string name="system">System</string>
+    <string name="bass_boost">Bass Boost</string>
+    <string name="virtualize">Virtualize</string>
+    <string name="presets">Presets</string>
+    <string name="save_preset">Save Preset</string>
+    <string name="enter_preset_name">Enter preset name</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="vibration_setting">Vibration Setting</string>
+    <string name="equalizer_setting">Equalizer Setting</string>
+    <string name="languages">Languages</string>
+    <string name="edge_lighting">Edge Lighting</string>
+    <string name="click_here_to_open_edge_lighting">Click here to open Edge lighting</string>
+    <string name="theme">Theme</string>
+    <string name="this_is_function_with_colorful_theme">This is function with colorful theme</string>
+    <string name="control_the_music">Control the music</string>
+    <string name="you_can_play_and_control_music_as_you_like">You can play control music as you like</string>
+    <string name="volume_knob">Volume knob</string>
+    <string name="adjust_the_volume_up_to_500_by_turning_the_knob">Adjust the volume up to 500% by turning the knob</string>
+    <string name="adjust">Adjust</string>
+    <string name="adjust_system_volume">Adjust system volume</string>
+    <string name="quick_select">Quick select</string>
+    <string name="quick_adjust_volume">Quick adjust volume</string>
+    <string name="language">Language</string>
 </resources>

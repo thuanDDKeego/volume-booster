@@ -3,13 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
+    <uses-permission
+        android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="lineageos.permission.OBSERVE_AUDIO_SESSIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -54,6 +58,7 @@
         <service
             android:name=".services.NotificationHandlePlaybackService"
             android:exported="true"
+            android:enabled="true"
             android:label="notification_service"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -61,16 +66,24 @@
             </intent-filter>
         </service>
 
+<!--        <service-->
+<!--            android:name=".services.volumeboost.VolumeBoostService"-->
+<!--            android:enabled="true"-->
+<!--            android:foregroundServiceType="mediaPlayback" />-->
+
         <service
-            android:name=".services.volumeboost.VolumeBoostService"
+            android:name=".services.volumeboostv2.UpdateVolumeBoostService"
             android:enabled="true"
             android:foregroundServiceType="mediaPlayback" />
 
         <service
-            android:name=".services.detechappopen.AppDetectionService"
+            android:name=".services.EqualizerService"
             android:enabled="true"
-            android:exported="true" />
-
+            android:foregroundServiceType="mediaPlayback" />
+        <service
+            android:name=".services.VolumeBoostService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaPlayback" />
         <receiver
             android:name=".services.volumeboost.ServiceDispatcher"
             android:exported="true">

@@ -15,8 +15,7 @@ import androidx.core.app.NotificationCompat
 import dagger.hilt.android.AndroidEntryPoint
 import dev.keego.volume.booster.MainActivity
 import dev.keego.volume.booster.R
-import dev.keego.volume.booster.repositories.BoostServiceRepository
-import dev.keego.volume.booster.services.detechappopen.AppForegroundReceiver
+import dev.keego.volume.booster.section.repositories.BoostServiceRepository
 import dev.keego.volume.booster.services.messages.QueryReplyOn
 import dev.keego.volume.booster.services.messages.QueryReplyPing
 import dev.keego.volume.booster.services.messages.ServiceCommand
@@ -173,6 +172,7 @@ class VolumeBoostService : Service() {
                 on = false
                 updateNotification()
             }
+            else -> {}
         }
         if (GlobalVars.DEBUG_TOAST) {
             Toast.makeText(this, "Received command: $command", Toast.LENGTH_SHORT).show()

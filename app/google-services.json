@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "778620591567",
+    "project_id": "volume-booster-debug",
+    "storage_bucket": "volume-booster-debug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778620591567:android:acc583b94b9bae8a2046ba",
+        "android_client_info": {
+          "package_name": "dev.keego.volume.booster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778620591567-jb9ifb8tr2le8rtvbn9qtniji957vb43.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.keego.volume.booster",
+            "certificate_hash": "a961720783b3c513acc85c94666f7ac2f9685971"
+          }
+        },
+        {
+          "client_id": "778620591567-rovasqgfmh3h1qrccbhhh1d0jgc89r3b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA76Ce4vpmoTg9LOIqqacvF0k6RQGoiF90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778620591567-rovasqgfmh3h1qrccbhhh1d0jgc89r3b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

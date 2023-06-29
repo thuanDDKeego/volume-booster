@@ -7,6 +7,7 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import dev.keego.volume.booster.services.volumeboostv2.UpdateVolumeBoostService
 import dev.keego.volume.booster.services.messages.AudioSessionEvent
 import dev.keego.volume.booster.services.messages.ServiceCommand
 import org.greenrobot.eventbus.EventBus
@@ -18,8 +19,12 @@ class ServiceDispatcher : BroadcastReceiver() {
 
     companion object {
         fun startService(context: Context) {
-            val service = Intent(context.applicationContext, VolumeBoostService::class.java)
+            val service = Intent(context.applicationContext, UpdateVolumeBoostService::class.java)
             ContextCompat.startForegroundService(context, service)
+//            val service = Intent(context.applicationContext, VolumeBoostService::class.java)
+//            val equalizerService = Intent(context.applicationContext, EqualizerService::class.java)
+//            ContextCompat.startForegroundService(context, service)
+//            ContextCompat.startForegroundService(context, equalizerService)
         }
 
         fun stopService(context: Context) {
