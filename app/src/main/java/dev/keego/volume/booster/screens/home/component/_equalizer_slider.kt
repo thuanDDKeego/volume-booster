@@ -56,6 +56,7 @@ fun _equalizer_slider(
         modifier = modifier
             .fillMaxSize(),
         value = value,
+        displayValue = value / 100f,
         enable = enabled,
         range = valueRange,
         primaryColor = Color(0xFFFF5722),
