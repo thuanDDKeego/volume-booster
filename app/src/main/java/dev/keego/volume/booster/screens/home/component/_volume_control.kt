@@ -1,6 +1,5 @@
 package dev.keego.volume.booster.screens.home.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,14 +45,13 @@ fun _volume_control(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(24.dp)
+            .padding(vertical = 24.dp, horizontal = 16.dp)
     ) {
         _bar_visualizer(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .width(28.dp)
-                .height(220.dp)
-                .background(Color(0x40000000)),
+                .width(46.dp)
+                .height(220.dp),
             resolution = 1,
             visualizationData = visualizerData
         )
@@ -101,9 +99,8 @@ fun _volume_control(
         _bar_visualizer(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .width(28.dp)
-                .height(220.dp)
-                .background(Color(0x40000000)),
+                .width(46.dp)
+                .height(220.dp),
             resolution = 1,
             visualizationData = visualizerData
         )

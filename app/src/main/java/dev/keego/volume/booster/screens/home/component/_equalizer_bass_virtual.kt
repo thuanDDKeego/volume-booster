@@ -61,7 +61,7 @@ fun _equalizer_bass_virtual(
         //
         _bar_visualizer(
             modifier = Modifier
-                .width(28.dp)
+                .width(40.dp)
                 .height(180.dp)
                 .background(Color(0x40000000)),
             resolution = 1,
@@ -123,7 +123,7 @@ fun _equalizer_bass_virtual(
         Spacer(modifier = Modifier.weight(1f))
         _bar_visualizer(
             modifier = Modifier
-                .width(28.dp)
+                .width(40.dp)
                 .height(180.dp)
                 .background(Color(0x40000000)),
             resolution = 1,

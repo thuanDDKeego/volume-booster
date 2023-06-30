@@ -169,7 +169,14 @@ fun _vertical_gradient_slider(
             //endregion
             // this is background of slider
             drawLine(
-                color = primaryColor.copy(alpha = 0.3f),
+                brush = Brush.horizontalGradient(
+                    listOf(
+                        Color(0xFF0A0A0A),
+                        Color(0xFF383838)
+                    ),
+                    startX = width / 2f - trackWidth / 2f,
+                    endX = width / 2f + trackWidth / 2f
+                ),
                 start = Offset(
                     x = width / 2f,
                     y = trackWidth / 2f
