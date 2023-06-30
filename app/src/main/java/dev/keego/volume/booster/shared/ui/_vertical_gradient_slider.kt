@@ -1,10 +1,9 @@
 package dev.keego.volume.booster.shared.ui
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.awaitVerticalDragOrCancellation
-import androidx.compose.foundation.gestures.forEachGesture
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlin.math.roundToInt
 
 @Composable
 fun _vertical_gradient_slider(
@@ -45,21 +43,9 @@ fun _vertical_gradient_slider(
     var circleCenter by remember {
         mutableStateOf(Offset.Zero)
     }
-    var oldValue by remember {
-        mutableStateOf(value) // <- Use value instead of initialValue
-    }
-
-    var changeAngle by remember {
-        mutableStateOf(0f)
-    }
-
-    var dragStartedAngle by remember {
-        mutableStateOf(0f)
-    }
-
-    var oldPositionValue by remember {
-        mutableStateOf(value) // <- Use value instead of initialValue
-    }
+    val animateValue by animateFloatAsState(
+        targetValue = value.toFloat()
+    )
 
     Box(
         modifier = modifier.size(width = progressSize.dp, height = progressSize.dp),
@@ -70,23 +56,42 @@ fun _vertical_gradient_slider(
                 .size(width = progressSize.dp, height = progressSize.dp)
                 .pointerInput(true) {
                     if (enable) {
-                        forEachGesture {
-                            awaitPointerEventScope {
-                                val down = awaitFirstDown(requireUnconsumed = false)
-                                var oldValue = oldValue
-                                while (true) {
-                                    val change = awaitVerticalDragOrCancellation(down.id) ?: break
-                                    val newValue =
-                                        ((maxValue - (change.position.y / size.height) * maxValue).roundToInt()).coerceIn(
-                                            range
-                                        )
-                                    if (oldValue != newValue) {
-                                        onValueChange(newValue)
-                                        oldValue = newValue
-                                    }
-                                }
+//                        forEachGesture {
+//                            awaitPointerEventScope {
+//                                val down = awaitFirstDown(requireUnconsumed = false)
+//                                var oldValue = oldValue
+//                                while (true) {
+//                                    val change = awaitVerticalDragOrCancellation(down.id) ?: break
+//                                    val newValue =
+//                                        ((maxValue - (change.position.y / size.height) * maxValue).roundToInt()).coerceIn(
+//                                            range
+//                                        )
+//                                    if (oldValue != newValue) {
+//                                        onValueChange(newValue)
+//                                        oldValue = newValue
+//                                    }
+//                                }
+//                            }
+//                        }
+                        detectDragGestures(
+                            onDragStart = { offset ->
+                                /* Called when the drag gesture starts */
+                                // Called when the drag gesture is updated
+                                val newValue =
+                                    (maxValue - (offset.y / size.height) * maxValue).toInt()
+                                        .coerceIn(0, maxValue)
+                                onValueChange(newValue)
+                            },
+                            onDragEnd = { /* Called when the drag gesture ends */ },
+                            onDragCancel = { /* Called when the drag gesture is cancelled */ },
+                            onDrag = { change, dragAmount ->
+                                // Called when the drag gesture is updated
+                                val newValue =
+                                    (maxValue - (change.position.y / size.height) * maxValue).toInt()
+                                        .coerceIn(0, maxValue)
+                                onValueChange(newValue)
                             }
-                        }
+                        )
                     }
                 }
                 .padding(horizontal = 5.dp)
@@ -126,7 +131,7 @@ fun _vertical_gradient_slider(
                 ),
                 end = Offset(
                     x = width / 2f,
-                    y = circleThickness / 2f + (height - circleThickness) * ((range.last - value.toFloat()) / range.last)
+                    y = circleThickness / 2f + (height - circleThickness) * ((range.last - animateValue.toFloat()) / range.last)
                 ),
                 strokeWidth = circleThickness,
                 cap = StrokeCap.Round
@@ -137,7 +142,7 @@ fun _vertical_gradient_slider(
                 radius = circleThickness,
                 center = Offset(
                     x = width / 2f,
-                    y = circleThickness / 2f + (height - pointRadius) * ((range.last - value.toFloat()) / range.last)
+                    y = circleThickness / 2f + (height - pointRadius) * ((range.last - animateValue.toFloat()) / range.last)
                 )
 
             )
