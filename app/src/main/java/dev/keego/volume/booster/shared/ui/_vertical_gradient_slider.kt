@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Composable
-@Stable
 fun _vertical_gradient_slider(
     modifier: Modifier = Modifier,
     value: Float, // <- Passed from outside
@@ -35,7 +33,6 @@ fun _vertical_gradient_slider(
     secondaryColor: Color,
     enable: Boolean = true,
     numberOfOutlineLine: Int = 15,
-    // range always start from 0 to maxValue
     range: ClosedFloatingPointRange<Float> = 0f..1f,
     trackWidth: Dp = 36.dp,
     onValueChange: (Float) -> Unit
@@ -49,32 +46,40 @@ fun _vertical_gradient_slider(
     val animateValue by animateFloatAsState(
         targetValue = value
     )
-
-    Box(
-        modifier = modifier
-            .pointerInput(true) {
-                if (enable) {
-                    detectDragGestures(
-                        onDragStart = { offset ->
-                            /* Called when the drag gesture starts */
-                            // Called when the drag gesture is updated
+    // this modifier handle user's dragger
+    var boxModifier = modifier
+    if (enable) {
+        boxModifier = boxModifier.pointerInput(true) {
+            if (enable) {
+                detectDragGestures(
+                    onDragStart = { offset ->
+                        /* Called when the drag gesture starts */
+                        // Called when the drag gesture is updated
+                        if (enable) {
                             val newValue =
                                 (range.endInclusive - (offset.y / size.height) * totalRange)
                                     .coerceIn(range.start, range.endInclusive)
                             onValueChange(newValue)
-                        },
-                        onDragEnd = { /* Called when the drag gesture ends */ },
-                        onDragCancel = { /* Called when the drag gesture is cancelled */ },
-                        onDrag = { change, dragAmount ->
-                            // Called when the drag gesture is updated
+                        }
+                    },
+                    onDragEnd = { /* Called when the drag gesture ends */ },
+                    onDragCancel = { /* Called when the drag gesture is cancelled */ },
+                    onDrag = { change, dragAmount ->
+                        // Called when the drag gesture is updated
+                        if (enable) {
                             val newValue =
                                 (range.endInclusive - (change.position.y / size.height) * totalRange)
                                     .coerceIn(range.start, range.endInclusive)
                             onValueChange(newValue)
                         }
-                    )
-                }
+                    }
+                )
             }
+        }
+    }
+
+    Box(
+        modifier = boxModifier
             .padding(horizontal = 5.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -101,7 +106,7 @@ fun _vertical_gradient_slider(
             )
             val steps = 100
             val gradientColors = List(steps) { fraction ->
-                lerp(secondaryColor, Color.Red, fraction.toFloat() / steps)
+                lerp(secondaryColor, primaryColor, fraction.toFloat() / steps)
             }
             drawLine(
                 brush = Brush.verticalGradient(
@@ -119,7 +124,8 @@ fun _vertical_gradient_slider(
                 ),
                 end = Offset(
                     x = width / 2f,
-                    y = trackWidth / 2f + (height - trackWidth) * ((range.endInclusive - animateValue) / totalRange)
+                    y = trackWidth / 2f +
+                        (height - trackWidth) * ((range.endInclusive - animateValue) / totalRange)
                 ),
                 strokeWidth = trackWidth,
                 cap = StrokeCap.Round
@@ -130,7 +136,8 @@ fun _vertical_gradient_slider(
                 radius = trackWidth,
                 center = Offset(
                     x = width / 2f,
-                    y = trackWidth / 2f + (height - pointRadius) * ((range.endInclusive - animateValue) / totalRange)
+                    y = trackWidth / 2f +
+                        (height - pointRadius) * ((range.endInclusive - animateValue) / totalRange)
                 )
             )
         }
